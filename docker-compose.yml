@@ -1,0 +1,6 @@
+services:
+  fanvue-sdk:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["pytest", "-q"]

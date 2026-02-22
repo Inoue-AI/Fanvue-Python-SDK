@@ -1,0 +1,72 @@
+[build-system]
+requires = ["hatchling>=1.26.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "fanvue-python-sdk"
+version = "0.1.0"
+description = "Async Python SDK for the Fanvue API"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Fanvue SDK Contributors" }]
+keywords = ["fanvue", "sdk", "api", "async", "httpx"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Software Development :: Libraries",
+]
+dependencies = [
+  "httpx>=0.27.0,<1.0.0",
+  "pydantic>=2.8.0,<3.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "mypy>=1.17.0",
+  "pytest>=8.4.0",
+  "pytest-asyncio>=0.23.0",
+  "ruff>=0.8.0",
+  "pyyaml>=6.0.0",
+]
+
+[project.urls]
+Homepage = "https://api.fanvue.com/docs"
+Documentation = "https://api.fanvue.com/docs"
+Repository = "https://github.com/fanvue/Fanvue-Python-SDK"
+
+[tool.hatch.build.targets.wheel]
+packages = ["fanvue_sdk"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "ASYNC"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+show_error_codes = true
+packages = ["fanvue_sdk"]
+
+[[tool.mypy.overrides]]
+module = ["tests.*"]
+disallow_untyped_defs = false
+check_untyped_defs = true
