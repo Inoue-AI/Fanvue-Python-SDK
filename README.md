@@ -2,6 +2,9 @@
 
 Async Python SDK for the [Fanvue API](https://api.fanvue.com/docs), generated from Fanvue's official API reference (`.mdx`) endpoints.
 
+[![PyPI](https://img.shields.io/pypi/v/fanvue-python-sdk)](https://pypi.org/project/fanvue-python-sdk/)
+[![Python](https://img.shields.io/pypi/pyversions/fanvue-python-sdk)](https://pypi.org/project/fanvue-python-sdk/)
+
 - Fully async (`httpx.AsyncClient`)
 - Generated resource methods for all documented API reference endpoints
 - Generated Pydantic response models for endpoint payloads
@@ -15,7 +18,7 @@ Async Python SDK for the [Fanvue API](https://api.fanvue.com/docs), generated fr
 ## Installation
 
 ```bash
-pip install -e .
+pip install fanvue-python-sdk
 ```
 
 For development tools:
