@@ -56,7 +56,7 @@ class ListChatsChatsGetResponsesContentApplicationJsonSchemaDataItemsUser(Fanvue
 
 class ListChatsChatsGetResponsesContentApplicationJsonSchemaDataItemsLastMessage(FanvueModel):
     text: str | None
-    type: Literal['AUTOMATED_CANCELED', 'AUTOMATED_NEW_FOLLOWER', 'AUTOMATED_NEW_PURCHASE', 'AUTOMATED_NEW_SUBSCRIBER', 'AUTOMATED_RE_SUBSCRIBED', 'AUTOMATED_RENEWED', 'CHAT_TEXT_GENERATION', 'CHAT_TEXT_REPLY', 'CHAT_TEXT_REWRITE', 'SINGLE_RECIPIENT', 'TIP', 'VOICE_CALL', 'BROADCAST', 'GHOST_PROMOTION']
+    type: str  # e.g. SINGLE_RECIPIENT, TIP, AUTOMATED_FIRST_MESSAGE_REPLY, etc.
     uuid: str
     sentAt: str
     hasMedia: bool | None
@@ -163,7 +163,7 @@ class ListMessagesChatsUserUuidMessagesGetResponsesContentApplicationJsonSchemaD
     hasMedia: bool | None
     mediaType: Literal['image', 'video', 'audio', 'document'] | None
     mediaUuids: list[str]
-    type: Literal['AUTOMATED_CANCELED', 'AUTOMATED_NEW_FOLLOWER', 'AUTOMATED_NEW_PURCHASE', 'AUTOMATED_NEW_SUBSCRIBER', 'AUTOMATED_RE_SUBSCRIBED', 'AUTOMATED_RENEWED', 'CHAT_TEXT_GENERATION', 'CHAT_TEXT_REPLY', 'CHAT_TEXT_REWRITE', 'SINGLE_RECIPIENT', 'TIP', 'VOICE_CALL']
+    type: str  # e.g. SINGLE_RECIPIENT, TIP, AUTOMATED_FIRST_MESSAGE_REPLY, etc.
     pricing: ListMessagesChatsUserUuidMessagesGetResponsesContentApplicationJsonSchemaDataItemsPricing | None
     purchasedAt: str | None
     sentByUserId: str | None
@@ -856,7 +856,7 @@ class ListCreatorChatsCreatorsCreatorUserUuidChatsGetResponsesContentApplication
 
 class ListCreatorChatsCreatorsCreatorUserUuidChatsGetResponsesContentApplicationJsonSchemaDataItemsLastMessage(FanvueModel):
     text: str | None
-    type: Literal['AUTOMATED_CANCELED', 'AUTOMATED_NEW_FOLLOWER', 'AUTOMATED_NEW_PURCHASE', 'AUTOMATED_NEW_SUBSCRIBER', 'AUTOMATED_RE_SUBSCRIBED', 'AUTOMATED_RENEWED', 'CHAT_TEXT_GENERATION', 'CHAT_TEXT_REPLY', 'CHAT_TEXT_REWRITE', 'SINGLE_RECIPIENT', 'TIP', 'VOICE_CALL', 'BROADCAST', 'GHOST_PROMOTION']
+    type: str  # e.g. SINGLE_RECIPIENT, TIP, AUTOMATED_FIRST_MESSAGE_REPLY, etc.
     uuid: str
     sentAt: str
     hasMedia: bool | None
@@ -987,7 +987,7 @@ class ListCreatorMessagesCreatorsCreatorUserUuidChatsUserUuidMessagesGetResponse
     hasMedia: bool | None
     mediaType: Literal['image', 'video', 'audio', 'document'] | None
     mediaUuids: list[str]
-    type: Literal['AUTOMATED_CANCELED', 'AUTOMATED_NEW_FOLLOWER', 'AUTOMATED_NEW_PURCHASE', 'AUTOMATED_NEW_SUBSCRIBER', 'AUTOMATED_RE_SUBSCRIBED', 'AUTOMATED_RENEWED', 'CHAT_TEXT_GENERATION', 'CHAT_TEXT_REPLY', 'CHAT_TEXT_REWRITE', 'SINGLE_RECIPIENT', 'TIP', 'VOICE_CALL']
+    type: str  # e.g. SINGLE_RECIPIENT, TIP, AUTOMATED_FIRST_MESSAGE_REPLY, etc.
     pricing: ListCreatorMessagesCreatorsCreatorUserUuidChatsUserUuidMessagesGetResponsesContentApplicationJsonSchemaDataItemsPricing | None
     purchasedAt: str | None
     sentByUserId: str | None
