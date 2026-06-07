@@ -301,13 +301,19 @@ func parseAPIError(resp *http.Response, raw []byte) *Error {
 
 // encodeQuery builds a url.Values, omitting any entries whose value is nil so
 // that optional parameters are not sent. Integer pointers are rendered without
-// scientific notation.
+// scientific notation. Slice values are rendered as repeated keys
+// (e.g. ?filter=a&filter=b), matching how the Python SDK's httpx client
+// serializes list query parameters.
 func encodeQuery(params map[string]any) url.Values {
 	q := url.Values{}
 	for key, value := range params {
 		switch v := value.(type) {
 		case nil:
 			continue
+		case []string:
+			for _, item := range v {
+				q.Add(key, item)
+			}
 		case string:
 			if v != "" {
 				q.Set(key, v)
