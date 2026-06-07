@@ -8,9 +8,12 @@ from typing import Any, Literal, cast
 from fanvue_sdk.models import (
     CompleteUploadSessionResponse,
     CreateUploadSessionResponse,
-    GetUploadPartUrlResponse,
+    GetBulkMediaResponse,
+    GetEntitledMediaResponse,
+    GetMediaLinkPurchaseStatusResponse,
     GetUserMediaByUuidResponse,
     GetUserMediaResponse,
+    GrantMediaResponse,
 )
 from fanvue_sdk.resources.base import BaseResource
 
@@ -18,12 +21,12 @@ from fanvue_sdk.resources.base import BaseResource
 class MediaResource(BaseResource):
     """MediaResource endpoints."""
 
-    async def complete_upload_session(self, upload_id: str, *, body: Mapping[str, Any] | None = None) -> CompleteUploadSessionResponse:
+    async def complete_upload_session(self, upload_id: str, *, body: Mapping[str, Any]) -> CompleteUploadSessionResponse:
         """
         Complete upload session
 
         `PATCH /media/uploads/{uploadId}`
-        Docs: https://api.fanvue.com/docs/api-reference/reference/media/complete-upload-session
+        Docs: https://api.fanvue.com/docs/api-reference/reference/complete-upload-session
         """
         return cast(CompleteUploadSessionResponse, await self._client._call_operation(
             operation_id='complete_upload_session',
@@ -33,39 +36,87 @@ class MediaResource(BaseResource):
             body=body,
         ))
 
-    async def create_upload_session(self, *, body: Mapping[str, Any] | None = None) -> CreateUploadSessionResponse:
+    async def create_upload_session(self, *, body: Mapping[str, Any]) -> CreateUploadSessionResponse:
         """
         Create multipart upload session
 
         `POST /media/uploads`
-        Docs: https://api.fanvue.com/docs/api-reference/reference/media/create-upload-session
+        Docs: https://api.fanvue.com/docs/api-reference/reference/create-upload-session
         """
         return cast(CreateUploadSessionResponse, await self._client._call_operation(
             operation_id='create_upload_session',
             body=body,
         ))
 
-    async def get_upload_part_url(self, upload_id: str, part_number: float) -> GetUploadPartUrlResponse:
+    async def get_bulk_media(self, *, media_uuids: str, variants: str | None = None) -> GetBulkMediaResponse:
+        """
+        Get bulk media by UUIDs
+
+        `GET /media/bulk`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-bulk-media
+        """
+        return cast(GetBulkMediaResponse, await self._client._call_operation(
+            operation_id='get_bulk_media',
+            query_params={
+                'mediaUuids': media_uuids,
+                'variants': variants,
+            },
+        ))
+
+    async def get_entitled_media(self, uuid: str, *, consumer_id: str, variants: Sequence[Literal['blurred', 'main', 'thumbnail', 'thumbnail_gallery']] | None = None) -> GetEntitledMediaResponse:
+        """
+        Get media for an entitled consumer
+
+        `GET /media/{uuid}/entitled`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-entitled-media
+        """
+        return cast(GetEntitledMediaResponse, await self._client._call_operation(
+            operation_id='get_entitled_media',
+            path_params={
+                'uuid': uuid,
+            },
+            query_params={
+                'consumerId': consumer_id,
+                'variants': variants,
+            },
+        ))
+
+    async def get_media_link_purchase_status(self, uuid: str) -> GetMediaLinkPurchaseStatusResponse:
+        """
+        Check if the authenticated user has purchased a media link
+
+        `GET /media/links/{uuid}/purchased`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-media-link-purchase-status
+        """
+        return cast(GetMediaLinkPurchaseStatusResponse, await self._client._call_operation(
+            operation_id='get_media_link_purchase_status',
+            path_params={
+                'uuid': uuid,
+            },
+        ))
+
+    async def get_upload_part_url(self, upload_id: str, part_number: float | None) -> None:
         """
         Get signed URL for upload part
 
         `GET /media/uploads/{uploadId}/parts/{partNumber}/url`
-        Docs: https://api.fanvue.com/docs/api-reference/reference/media/get-upload-part-url
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-upload-part-url
         """
-        return cast(GetUploadPartUrlResponse, await self._client._call_operation(
+        await self._client._call_operation(
             operation_id='get_upload_part_url',
             path_params={
                 'uploadId': upload_id,
                 'partNumber': part_number,
             },
-        ))
+        )
+        return None
 
     async def get_user_media(self, *, page: float | None = None, size: float | None = None, media_type: Literal['image', 'video', 'audio', 'document'] | None = None, folder_name: str | None = None, usage: Literal['subscribers', 'followers', 'ppv', 'mass_messages'] | None = None, purchased_by: str | None = None, status: Sequence[Literal['created', 'processing', 'ready', 'error']] | None = None, variants: Sequence[Literal['blurred', 'main', 'thumbnail', 'thumbnail_gallery']] | None = None) -> GetUserMediaResponse:
         """
         Get user's media list
 
         `GET /media`
-        Docs: https://api.fanvue.com/docs/api-reference/reference/media/get-user-media
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-user-media
         """
         return cast(GetUserMediaResponse, await self._client._call_operation(
             operation_id='get_user_media',
@@ -86,7 +137,7 @@ class MediaResource(BaseResource):
         Get media by UUID
 
         `GET /media/{uuid}`
-        Docs: https://api.fanvue.com/docs/api-reference/reference/media/get-user-media-by-uuid
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-user-media-by-uuid
         """
         return cast(GetUserMediaByUuidResponse, await self._client._call_operation(
             operation_id='get_user_media_by_uuid',
@@ -97,4 +148,19 @@ class MediaResource(BaseResource):
                 'purchasedBy': purchased_by,
                 'variants': variants,
             },
+        ))
+
+    async def grant_media(self, uuid: str, *, body: Mapping[str, Any]) -> GrantMediaResponse:
+        """
+        Grant a consumer access to a media item
+
+        `POST /media/{uuid}/grant`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/grant-media
+        """
+        return cast(GrantMediaResponse, await self._client._call_operation(
+            operation_id='grant_media',
+            path_params={
+                'uuid': uuid,
+            },
+            body=body,
         ))

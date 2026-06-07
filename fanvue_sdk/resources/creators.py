@@ -2,12 +2,53 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping
-from typing import Any, cast
+from collections.abc import Mapping, Sequence
+from typing import Any, Literal, cast
 
 from fanvue_sdk.models import (
-    ListFollowersResponse,
-    ListSubscribersResponse,
+    AttachCreatorVaultMediaResponse,
+    CompleteCreatorUploadSessionResponse,
+    CreateCreatorChatResponse,
+    CreateCreatorPostCommentResponse,
+    CreateCreatorPostResponse,
+    CreateCreatorTrackingLinkResponse,
+    CreateCreatorUploadSessionResponse,
+    CreateCreatorVaultFolderResponse,
+    GetCreatorAccountResponse,
+    GetCreatorCustomListMembersResponse,
+    GetCreatorCustomListsResponse,
+    GetCreatorEarningsResponse,
+    GetCreatorEarningsSummaryResponse,
+    GetCreatorMediaByUuidResponse,
+    GetCreatorMediaResponse,
+    GetCreatorMessageMediaByUuidsResponse,
+    GetCreatorPostCommentsResponse,
+    GetCreatorPostsResponse,
+    GetCreatorSmartListMembersResponse,
+    GetCreatorSmartListsResponse,
+    GetCreatorSubscribersResponse,
+    GetCreatorTopSpendersResponse,
+    GetCreatorUserTrackingMetadataResponse,
+    GetCreatorVaultFolderResponse,
+    GetOnlineSubscribersResponse,
+    ListCreatorChatMediaResponse,
+    ListCreatorChatsResponse,
+    ListCreatorFollowersResponse,
+    ListCreatorMassMessagesResponse,
+    ListCreatorMessagesResponse,
+    ListCreatorNotificationsResponse,
+    ListCreatorsResponse,
+    ListCreatorSubscribersResponse,
+    ListCreatorTrackingLinksResponse,
+    ListCreatorTrackingLinkUsersResponse,
+    ListCreatorVaultFolderMediaResponse,
+    ListCreatorVaultFoldersResponse,
+    PinCreatorPostResponse,
+    RepostCreatorPostResponse,
+    SendCreatorMassMessageResponse,
+    SendCreatorMessageResponse,
+    UnpinCreatorPostResponse,
+    UpdateCreatorPostResponse,
 )
 from fanvue_sdk.resources.base import BaseResource
 
@@ -15,37 +56,872 @@ from fanvue_sdk.resources.base import BaseResource
 class CreatorsResource(BaseResource):
     """CreatorsResource endpoints."""
 
-    async def list_followers(self, *, page: float | None = None, size: float | None = None) -> ListFollowersResponse:
+    async def attach_creator_vault_media(self, creator_user_uuid: str, folder_name: str, *, body: Mapping[str, Any]) -> AttachCreatorVaultMediaResponse:
         """
-        Get followers
+        Add media to creator vault folder
 
-        `GET /followers`
-        Docs: https://api.fanvue.com/docs/api-reference/reference/creators/list-followers
+        `POST /creators/{creatorUserUuid}/vault/folders/{folderName}/media`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/attach-creator-vault-media
         """
-        return cast(ListFollowersResponse, await self._client._call_operation(
-            operation_id='list_followers',
+        return cast(AttachCreatorVaultMediaResponse, await self._client._call_operation(
+            operation_id='attach_creator_vault_media',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+                'folderName': folder_name,
+            },
+            body=body,
+        ))
+
+    async def complete_creator_upload_session(self, creator_user_uuid: str, upload_id: str, *, body: Mapping[str, Any]) -> CompleteCreatorUploadSessionResponse:
+        """
+        Complete creator's upload session
+
+        `PATCH /creators/{creatorUserUuid}/media/uploads/{uploadId}`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/complete-creator-upload-session
+        """
+        return cast(CompleteCreatorUploadSessionResponse, await self._client._call_operation(
+            operation_id='complete_creator_upload_session',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+                'uploadId': upload_id,
+            },
+            body=body,
+        ))
+
+    async def create_creator_chat(self, creator_user_uuid: str, *, body: Mapping[str, Any]) -> CreateCreatorChatResponse:
+        """
+        Create new chat as creator
+
+        `POST /creators/{creatorUserUuid}/chats`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/create-creator-chat
+        """
+        return cast(CreateCreatorChatResponse, await self._client._call_operation(
+            operation_id='create_creator_chat',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+            },
+            body=body,
+        ))
+
+    async def create_creator_post(self, creator_user_uuid: str, *, body: Mapping[str, Any]) -> CreateCreatorPostResponse:
+        """
+        Create a new post for a creator
+
+        `POST /creators/{creatorUserUuid}/posts`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/create-creator-post
+        """
+        return cast(CreateCreatorPostResponse, await self._client._call_operation(
+            operation_id='create_creator_post',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+            },
+            body=body,
+        ))
+
+    async def create_creator_post_comment(self, creator_user_uuid: str, uuid: str, *, body: Mapping[str, Any]) -> CreateCreatorPostCommentResponse:
+        """
+        Create a comment on a post for a creator
+
+        `POST /creators/{creatorUserUuid}/posts/{uuid}/comments`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/create-creator-post-comment
+        """
+        return cast(CreateCreatorPostCommentResponse, await self._client._call_operation(
+            operation_id='create_creator_post_comment',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+                'uuid': uuid,
+            },
+            body=body,
+        ))
+
+    async def create_creator_tracking_link(self, creator_user_uuid: str, *, body: Mapping[str, Any] | None = None) -> CreateCreatorTrackingLinkResponse:
+        """
+        Create a tracking link for a creator
+
+        `POST /creators/{creatorUserUuid}/tracking-links`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/create-creator-tracking-link
+        """
+        return cast(CreateCreatorTrackingLinkResponse, await self._client._call_operation(
+            operation_id='create_creator_tracking_link',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+            },
+            body=body,
+        ))
+
+    async def create_creator_upload_session(self, creator_user_uuid: str, *, body: Mapping[str, Any]) -> CreateCreatorUploadSessionResponse:
+        """
+        Create multipart upload session for creator
+
+        `POST /creators/{creatorUserUuid}/media/uploads`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/create-creator-upload-session
+        """
+        return cast(CreateCreatorUploadSessionResponse, await self._client._call_operation(
+            operation_id='create_creator_upload_session',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+            },
+            body=body,
+        ))
+
+    async def create_creator_vault_folder(self, creator_user_uuid: str, *, body: Mapping[str, Any]) -> CreateCreatorVaultFolderResponse:
+        """
+        Create a creator vault folder
+
+        `POST /creators/{creatorUserUuid}/vault/folders`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/create-creator-vault-folder
+        """
+        return cast(CreateCreatorVaultFolderResponse, await self._client._call_operation(
+            operation_id='create_creator_vault_folder',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+            },
+            body=body,
+        ))
+
+    async def delete_creator_mass_message(self, creator_user_uuid: str, message_uuid: str) -> None:
+        """
+        Delete a creator mass message
+
+        `DELETE /creators/{creatorUserUuid}/chats/mass-messages/{messageUuid}`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/delete-creator-mass-message
+        """
+        await self._client._call_operation(
+            operation_id='delete_creator_mass_message',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+                'messageUuid': message_uuid,
+            },
+        )
+        return None
+
+    async def delete_creator_post(self, creator_user_uuid: str, uuid: str) -> None:
+        """
+        Delete a post for a creator
+
+        `DELETE /creators/{creatorUserUuid}/posts/{uuid}`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/delete-creator-post
+        """
+        await self._client._call_operation(
+            operation_id='delete_creator_post',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+                'uuid': uuid,
+            },
+        )
+        return None
+
+    async def delete_creator_post_comment(self, creator_user_uuid: str, uuid: str, comment_uuid: str) -> None:
+        """
+        Delete a comment from a post for a creator
+
+        `DELETE /creators/{creatorUserUuid}/posts/{uuid}/comments/{commentUuid}`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/delete-creator-post-comment
+        """
+        await self._client._call_operation(
+            operation_id='delete_creator_post_comment',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+                'uuid': uuid,
+                'commentUuid': comment_uuid,
+            },
+        )
+        return None
+
+    async def delete_creator_tracking_link(self, creator_user_uuid: str, uuid: str) -> None:
+        """
+        Delete a tracking link for a creator
+
+        `DELETE /creators/{creatorUserUuid}/tracking-links/{uuid}`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/delete-creator-tracking-link
+        """
+        await self._client._call_operation(
+            operation_id='delete_creator_tracking_link',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+                'uuid': uuid,
+            },
+        )
+        return None
+
+    async def delete_creator_vault_folder(self, creator_user_uuid: str, folder_name: str) -> None:
+        """
+        Delete creator vault folder
+
+        `DELETE /creators/{creatorUserUuid}/vault/folders/{folderName}`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/delete-creator-vault-folder
+        """
+        await self._client._call_operation(
+            operation_id='delete_creator_vault_folder',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+                'folderName': folder_name,
+            },
+        )
+        return None
+
+    async def detach_creator_vault_media(self, creator_user_uuid: str, folder_name: str, media_uuid: str) -> None:
+        """
+        Remove media from creator vault folder
+
+        `DELETE /creators/{creatorUserUuid}/vault/folders/{folderName}/media/{mediaUuid}`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/detach-creator-vault-media
+        """
+        await self._client._call_operation(
+            operation_id='detach_creator_vault_media',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+                'folderName': folder_name,
+                'mediaUuid': media_uuid,
+            },
+        )
+        return None
+
+    async def get_creator_account(self, creator_user_uuid: str) -> GetCreatorAccountResponse:
+        """
+        Get account view for a managed creator
+
+        `GET /creators/{creatorUserUuid}/account`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-creator-account
+        """
+        return cast(GetCreatorAccountResponse, await self._client._call_operation(
+            operation_id='get_creator_account',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+            },
+        ))
+
+    async def get_creator_custom_list_members(self, creator_user_uuid: str, uuid: str, *, page: float | None = None, size: float | None = None) -> GetCreatorCustomListMembersResponse:
+        """
+        Get creator's custom list members
+
+        `GET /creators/{creatorUserUuid}/chats/lists/custom/{uuid}`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-creator-custom-list-members
+        """
+        return cast(GetCreatorCustomListMembersResponse, await self._client._call_operation(
+            operation_id='get_creator_custom_list_members',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+                'uuid': uuid,
+            },
             query_params={
                 'page': page,
                 'size': size,
             },
         ))
 
-    async def list_subscribers(self, *, page: float | None = None, size: float | None = None) -> ListSubscribersResponse:
+    async def get_creator_custom_lists(self, creator_user_uuid: str, *, page: float | None = None, size: float | None = None) -> GetCreatorCustomListsResponse:
         """
-        Get subscribers
+        Get creator's custom lists
 
-        `GET /subscribers`
-        Docs: https://api.fanvue.com/docs/api-reference/reference/creators/list-subscribers
+        `GET /creators/{creatorUserUuid}/chats/lists/custom`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-creator-custom-lists
         """
-        return cast(ListSubscribersResponse, await self._client._call_operation(
-            operation_id='list_subscribers',
+        return cast(GetCreatorCustomListsResponse, await self._client._call_operation(
+            operation_id='get_creator_custom_lists',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+            },
             query_params={
                 'page': page,
                 'size': size,
             },
         ))
 
-    async def update_creator_chat(self, creator_user_uuid: str, user_uuid: str, *, body: Mapping[str, Any] | None = None) -> None:
+    async def get_creator_earnings(self, creator_user_uuid: str, *, start_date: str | None = None, end_date: str | None = None, source: Sequence[Literal['all', 'affiliate', 'appStore', 'checkoutLink', 'mediaLink', 'message', 'post', 'referral', 'renewal', 'subscription', 'tip', 'giveaway']] | None = None, cursor: str | None = None, size: float | None = None) -> GetCreatorEarningsResponse:
+        """
+        Get earnings data for a creator
+
+        `GET /creators/{creatorUserUuid}/insights/earnings`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-creator-earnings
+        """
+        return cast(GetCreatorEarningsResponse, await self._client._call_operation(
+            operation_id='get_creator_earnings',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+            },
+            query_params={
+                'startDate': start_date,
+                'endDate': end_date,
+                'source': source,
+                'cursor': cursor,
+                'size': size,
+            },
+        ))
+
+    async def get_creator_earnings_summary(self, creator_user_uuid: str, *, start_date: str | None = None, end_date: str | None = None, granularity: Literal['day', 'week'] | None = None, timezone: str | None = None) -> GetCreatorEarningsSummaryResponse:
+        """
+        Get aggregated earnings summary for a creator
+
+        `GET /creators/{creatorUserUuid}/insights/earnings/summary`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-creator-earnings-summary
+        """
+        return cast(GetCreatorEarningsSummaryResponse, await self._client._call_operation(
+            operation_id='get_creator_earnings_summary',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+            },
+            query_params={
+                'startDate': start_date,
+                'endDate': end_date,
+                'granularity': granularity,
+                'timezone': timezone,
+            },
+        ))
+
+    async def get_creator_media(self, creator_user_uuid: str, *, page: float | None = None, size: float | None = None, media_type: Literal['image', 'video', 'audio', 'document'] | None = None, folder_name: str | None = None, usage: Literal['subscribers', 'followers', 'ppv', 'mass_messages'] | None = None, purchased_by: str | None = None, status: Sequence[Literal['created', 'processing', 'ready', 'error']] | None = None, variants: Sequence[Literal['blurred', 'main', 'thumbnail', 'thumbnail_gallery']] | None = None) -> GetCreatorMediaResponse:
+        """
+        Get creator's media list
+
+        `GET /creators/{creatorUserUuid}/media`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-creator-media
+        """
+        return cast(GetCreatorMediaResponse, await self._client._call_operation(
+            operation_id='get_creator_media',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+            },
+            query_params={
+                'page': page,
+                'size': size,
+                'mediaType': media_type,
+                'folderName': folder_name,
+                'usage': usage,
+                'purchasedBy': purchased_by,
+                'status': status,
+                'variants': variants,
+            },
+        ))
+
+    async def get_creator_media_by_uuid(self, creator_user_uuid: str, uuid: str, *, purchased_by: str | None = None, variants: Sequence[Literal['blurred', 'main', 'thumbnail', 'thumbnail_gallery']] | None = None) -> GetCreatorMediaByUuidResponse:
+        """
+        Get creator's media by UUID
+
+        `GET /creators/{creatorUserUuid}/media/{uuid}`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-creator-media-by-uuid
+        """
+        return cast(GetCreatorMediaByUuidResponse, await self._client._call_operation(
+            operation_id='get_creator_media_by_uuid',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+                'uuid': uuid,
+            },
+            query_params={
+                'purchasedBy': purchased_by,
+                'variants': variants,
+            },
+        ))
+
+    async def get_creator_message_media_by_uuids(self, creator_user_uuid: str, user_uuid: str, message_uuid: str, *, media_uuids: str, variants: str | None = None) -> GetCreatorMessageMediaByUuidsResponse:
+        """
+        Resolve media UUIDs for a creator chat message
+
+        `GET /creators/{creatorUserUuid}/chats/{userUuid}/messages/{messageUuid}/media`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-creator-message-media-by-uuids
+        """
+        return cast(GetCreatorMessageMediaByUuidsResponse, await self._client._call_operation(
+            operation_id='get_creator_message_media_by_uuids',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+                'userUuid': user_uuid,
+                'messageUuid': message_uuid,
+            },
+            query_params={
+                'mediaUuids': media_uuids,
+                'variants': variants,
+            },
+        ))
+
+    async def get_creator_post_comments(self, creator_user_uuid: str, uuid: str, *, page: float | None = None, size: float | None = None) -> GetCreatorPostCommentsResponse:
+        """
+        Get comments on a creator's post
+
+        `GET /creators/{creatorUserUuid}/posts/{uuid}/comments`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-creator-post-comments
+        """
+        return cast(GetCreatorPostCommentsResponse, await self._client._call_operation(
+            operation_id='get_creator_post_comments',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+                'uuid': uuid,
+            },
+            query_params={
+                'page': page,
+                'size': size,
+            },
+        ))
+
+    async def get_creator_posts(self, creator_user_uuid: str, *, page: float | None = None, size: float | None = None, include_unpublished: Literal['true', 'false'] | None = None) -> GetCreatorPostsResponse:
+        """
+        Get posts for a creator
+
+        `GET /creators/{creatorUserUuid}/posts`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-creator-posts
+        """
+        return cast(GetCreatorPostsResponse, await self._client._call_operation(
+            operation_id='get_creator_posts',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+            },
+            query_params={
+                'page': page,
+                'size': size,
+                'includeUnpublished': include_unpublished,
+            },
+        ))
+
+    async def get_creator_smart_list_members(self, creator_user_uuid: str, uuid: Literal['subscribers', 'auto_renewing', 'non_renewing', 'followers', 'free_trial_subscribers', 'expired_subscribers', 'spent_more_than_50', 'muted'], *, page: float | None = None, size: float | None = None) -> GetCreatorSmartListMembersResponse:
+        """
+        Get creator's smart list members
+
+        `GET /creators/{creatorUserUuid}/chats/lists/smart/{uuid}`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-creator-smart-list-members
+        """
+        return cast(GetCreatorSmartListMembersResponse, await self._client._call_operation(
+            operation_id='get_creator_smart_list_members',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+                'uuid': uuid,
+            },
+            query_params={
+                'page': page,
+                'size': size,
+            },
+        ))
+
+    async def get_creator_smart_lists(self, creator_user_uuid: str) -> GetCreatorSmartListsResponse:
+        """
+        Get creator's smart lists
+
+        `GET /creators/{creatorUserUuid}/chats/lists/smart`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-creator-smart-lists
+        """
+        return cast(GetCreatorSmartListsResponse, await self._client._call_operation(
+            operation_id='get_creator_smart_lists',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+            },
+        ))
+
+    async def get_creator_subscribers(self, creator_user_uuid: str, *, start_date: str | None = None, end_date: str | None = None, cursor: str | None = None, size: float | None = None) -> GetCreatorSubscribersResponse:
+        """
+        Get subscriber events over time for a creator
+
+        `GET /creators/{creatorUserUuid}/insights/subscribers`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-creator-subscribers
+        """
+        return cast(GetCreatorSubscribersResponse, await self._client._call_operation(
+            operation_id='get_creator_subscribers',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+            },
+            query_params={
+                'startDate': start_date,
+                'endDate': end_date,
+                'cursor': cursor,
+                'size': size,
+            },
+        ))
+
+    async def get_creator_top_spenders(self, creator_user_uuid: str, *, start_date: str | None = None, end_date: str | None = None, page: float | None = None, size: float | None = None) -> GetCreatorTopSpendersResponse:
+        """
+        Get top-spending fans for a creator
+
+        `GET /creators/{creatorUserUuid}/insights/top-spenders`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-creator-top-spenders
+        """
+        return cast(GetCreatorTopSpendersResponse, await self._client._call_operation(
+            operation_id='get_creator_top_spenders',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+            },
+            query_params={
+                'startDate': start_date,
+                'endDate': end_date,
+                'page': page,
+                'size': size,
+            },
+        ))
+
+    async def get_creator_upload_part_url(self, creator_user_uuid: str, upload_id: str, part_number: float | None) -> None:
+        """
+        Get signed URL for upload part
+
+        `GET /creators/{creatorUserUuid}/media/uploads/{uploadId}/parts/{partNumber}/url`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-creator-upload-part-url
+        """
+        await self._client._call_operation(
+            operation_id='get_creator_upload_part_url',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+                'uploadId': upload_id,
+                'partNumber': part_number,
+            },
+        )
+        return None
+
+    async def get_creator_user_tracking_metadata(self, creator_user_uuid: str, uuid: str, user_uuid: str) -> GetCreatorUserTrackingMetadataResponse:
+        """
+        Get tracking metadata for a user on a creator's tracking link
+
+        `GET /creators/{creatorUserUuid}/tracking-links/{uuid}/users/{userUuid}/metadata`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-creator-user-tracking-metadata
+        """
+        return cast(GetCreatorUserTrackingMetadataResponse, await self._client._call_operation(
+            operation_id='get_creator_user_tracking_metadata',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+                'uuid': uuid,
+                'userUuid': user_uuid,
+            },
+        ))
+
+    async def get_creator_vault_folder(self, creator_user_uuid: str, folder_name: str) -> GetCreatorVaultFolderResponse:
+        """
+        Get creator vault folder details
+
+        `GET /creators/{creatorUserUuid}/vault/folders/{folderName}`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-creator-vault-folder
+        """
+        return cast(GetCreatorVaultFolderResponse, await self._client._call_operation(
+            operation_id='get_creator_vault_folder',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+                'folderName': folder_name,
+            },
+        ))
+
+    async def get_online_subscribers(self, creator_user_uuid: str, *, limit: float | None = None, subscriber_uuids: str | None = None) -> GetOnlineSubscribersResponse:
+        """
+        Get online subscribers
+
+        `GET /creators/{creatorUserUuid}/subscribers/online`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-online-subscribers
+        """
+        return cast(GetOnlineSubscribersResponse, await self._client._call_operation(
+            operation_id='get_online_subscribers',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+            },
+            query_params={
+                'limit': limit,
+                'subscriberUuids': subscriber_uuids,
+            },
+        ))
+
+    async def list_creator_chat_media(self, creator_user_uuid: str, user_uuid: str, *, cursor: str | None = None, media_type: Literal['image', 'video', 'audio', 'document'] | None = None, limit: float | None = None) -> ListCreatorChatMediaResponse:
+        """
+        Get media from a creator's chat
+
+        `GET /creators/{creatorUserUuid}/chats/{userUuid}/media`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/list-creator-chat-media
+        """
+        return cast(ListCreatorChatMediaResponse, await self._client._call_operation(
+            operation_id='list_creator_chat_media',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+                'userUuid': user_uuid,
+            },
+            query_params={
+                'cursor': cursor,
+                'mediaType': media_type,
+                'limit': limit,
+            },
+        ))
+
+    async def list_creator_chats(self, creator_user_uuid: str, *, page: float | None = None, size: float | None = None) -> ListCreatorChatsResponse:
+        """
+        Get chats of a creator
+
+        `GET /creators/{creatorUserUuid}/chats`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/list-creator-chats
+        """
+        return cast(ListCreatorChatsResponse, await self._client._call_operation(
+            operation_id='list_creator_chats',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+            },
+            query_params={
+                'page': page,
+                'size': size,
+            },
+        ))
+
+    async def list_creator_followers(self, creator_user_uuid: str, *, page: float | None = None, size: float | None = None) -> ListCreatorFollowersResponse:
+        """
+        Get creator followers
+
+        `GET /creators/{creatorUserUuid}/followers`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/list-creator-followers
+        """
+        return cast(ListCreatorFollowersResponse, await self._client._call_operation(
+            operation_id='list_creator_followers',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+            },
+            query_params={
+                'page': page,
+                'size': size,
+            },
+        ))
+
+    async def list_creator_mass_messages(self, creator_user_uuid: str, *, page: float | None = None, size: float | None = None, include_deleted: Literal['true', 'false'] | None = None) -> ListCreatorMassMessagesResponse:
+        """
+        List mass messages for a creator
+
+        `GET /creators/{creatorUserUuid}/chats/mass-messages`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/list-creator-mass-messages
+        """
+        return cast(ListCreatorMassMessagesResponse, await self._client._call_operation(
+            operation_id='list_creator_mass_messages',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+            },
+            query_params={
+                'page': page,
+                'size': size,
+                'includeDeleted': include_deleted,
+            },
+        ))
+
+    async def list_creator_messages(self, creator_user_uuid: str, user_uuid: str, *, page: float | None = None, size: float | None = None, mark_as_read: Literal['true', 'false'] | None = None) -> ListCreatorMessagesResponse:
+        """
+        Get messages between a creator and a user
+
+        `GET /creators/{creatorUserUuid}/chats/{userUuid}/messages`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/list-creator-messages
+        """
+        return cast(ListCreatorMessagesResponse, await self._client._call_operation(
+            operation_id='list_creator_messages',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+                'userUuid': user_uuid,
+            },
+            query_params={
+                'page': page,
+                'size': size,
+                'markAsRead': mark_as_read,
+            },
+        ))
+
+    async def list_creator_notifications(self, creator_user_uuid: str, *, page: float | None = None, size: float | None = None, event_type: int | None = None) -> ListCreatorNotificationsResponse:
+        """
+        Get creator notifications feed
+
+        `GET /creators/{creatorUserUuid}/notifications`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/list-creator-notifications
+        """
+        return cast(ListCreatorNotificationsResponse, await self._client._call_operation(
+            operation_id='list_creator_notifications',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+            },
+            query_params={
+                'page': page,
+                'size': size,
+                'eventType': event_type,
+            },
+        ))
+
+    async def list_creator_subscribers(self, creator_user_uuid: str, *, page: float | None = None, size: float | None = None) -> ListCreatorSubscribersResponse:
+        """
+        Get creator subscribers
+
+        `GET /creators/{creatorUserUuid}/subscribers`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/list-creator-subscribers
+        """
+        return cast(ListCreatorSubscribersResponse, await self._client._call_operation(
+            operation_id='list_creator_subscribers',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+            },
+            query_params={
+                'page': page,
+                'size': size,
+            },
+        ))
+
+    async def list_creator_tracking_link_users(self, creator_user_uuid: str, uuid: str, *, limit: int | None = None, cursor: str | None = None) -> ListCreatorTrackingLinkUsersResponse:
+        """
+        List users for a creator's tracking link
+
+        `GET /creators/{creatorUserUuid}/tracking-links/{uuid}/users`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/list-creator-tracking-link-users
+        """
+        return cast(ListCreatorTrackingLinkUsersResponse, await self._client._call_operation(
+            operation_id='list_creator_tracking_link_users',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+                'uuid': uuid,
+            },
+            query_params={
+                'limit': limit,
+                'cursor': cursor,
+            },
+        ))
+
+    async def list_creator_tracking_links(self, creator_user_uuid: str, *, limit: int | None = None, cursor: str | None = None, created_after: str | None = None, created_before: str | None = None) -> ListCreatorTrackingLinksResponse:
+        """
+        List creator's tracking links
+
+        `GET /creators/{creatorUserUuid}/tracking-links`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/list-creator-tracking-links
+        """
+        return cast(ListCreatorTrackingLinksResponse, await self._client._call_operation(
+            operation_id='list_creator_tracking_links',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+            },
+            query_params={
+                'limit': limit,
+                'cursor': cursor,
+                'createdAfter': created_after,
+                'createdBefore': created_before,
+            },
+        ))
+
+    async def list_creator_vault_folder_media(self, creator_user_uuid: str, folder_name: str, *, page: float | None = None, size: float | None = None) -> ListCreatorVaultFolderMediaResponse:
+        """
+        List media in creator vault folder
+
+        `GET /creators/{creatorUserUuid}/vault/folders/{folderName}/media`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/list-creator-vault-folder-media
+        """
+        return cast(ListCreatorVaultFolderMediaResponse, await self._client._call_operation(
+            operation_id='list_creator_vault_folder_media',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+                'folderName': folder_name,
+            },
+            query_params={
+                'page': page,
+                'size': size,
+            },
+        ))
+
+    async def list_creator_vault_folders(self, creator_user_uuid: str) -> ListCreatorVaultFoldersResponse:
+        """
+        List creator vault folders
+
+        `GET /creators/{creatorUserUuid}/vault/folders`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/list-creator-vault-folders
+        """
+        return cast(ListCreatorVaultFoldersResponse, await self._client._call_operation(
+            operation_id='list_creator_vault_folders',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+            },
+        ))
+
+    async def list_creators(self, *, page: float | None = None, size: float | None = None) -> ListCreatorsResponse:
+        """
+        Get agency creators
+
+        `GET /creators`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/list-creators
+        """
+        return cast(ListCreatorsResponse, await self._client._call_operation(
+            operation_id='list_creators',
+            query_params={
+                'page': page,
+                'size': size,
+            },
+        ))
+
+    async def pin_creator_post(self, creator_user_uuid: str, uuid: str) -> PinCreatorPostResponse:
+        """
+        Pin a post for a creator
+
+        `POST /creators/{creatorUserUuid}/posts/{uuid}/pin`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/pin-creator-post
+        """
+        return cast(PinCreatorPostResponse, await self._client._call_operation(
+            operation_id='pin_creator_post',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+                'uuid': uuid,
+            },
+        ))
+
+    async def rename_creator_vault_folder(self, creator_user_uuid: str, folder_name: str, *, body: Mapping[str, Any]) -> None:
+        """
+        Rename creator vault folder
+
+        `PATCH /creators/{creatorUserUuid}/vault/folders/{folderName}`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/rename-creator-vault-folder
+        """
+        await self._client._call_operation(
+            operation_id='rename_creator_vault_folder',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+                'folderName': folder_name,
+            },
+            body=body,
+        )
+        return None
+
+    async def repost_creator_post(self, creator_user_uuid: str, uuid: str) -> RepostCreatorPostResponse:
+        """
+        Repost content for a creator
+
+        `POST /creators/{creatorUserUuid}/posts/{uuid}/repost`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/repost-creator-post
+        """
+        return cast(RepostCreatorPostResponse, await self._client._call_operation(
+            operation_id='repost_creator_post',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+                'uuid': uuid,
+            },
+        ))
+
+    async def send_creator_mass_message(self, creator_user_uuid: str, *, body: Mapping[str, Any]) -> SendCreatorMassMessageResponse:
+        """
+        Send a mass message as creator
+
+        `POST /creators/{creatorUserUuid}/chats/mass-messages`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/send-creator-mass-message
+        """
+        return cast(SendCreatorMassMessageResponse, await self._client._call_operation(
+            operation_id='send_creator_mass_message',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+            },
+            body=body,
+        ))
+
+    async def send_creator_message(self, creator_user_uuid: str, user_uuid: str, *, body: Mapping[str, Any]) -> SendCreatorMessageResponse:
+        """
+        Send a message as creator
+
+        `POST /creators/{creatorUserUuid}/chats/{userUuid}/message`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/send-creator-message
+        """
+        return cast(SendCreatorMessageResponse, await self._client._call_operation(
+            operation_id='send_creator_message',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+                'userUuid': user_uuid,
+            },
+            body=body,
+        ))
+
+    async def unpin_creator_post(self, creator_user_uuid: str, uuid: str) -> UnpinCreatorPostResponse:
+        """
+        Unpin a post for a creator
+
+        `DELETE /creators/{creatorUserUuid}/posts/{uuid}/pin`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/unpin-creator-post
+        """
+        return cast(UnpinCreatorPostResponse, await self._client._call_operation(
+            operation_id='unpin_creator_post',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+                'uuid': uuid,
+            },
+        ))
+
+    async def update_creator_chat(self, creator_user_uuid: str, user_uuid: str, *, body: Mapping[str, Any]) -> None:
         """
         Update a creator's chat with a user
 
@@ -61,3 +937,36 @@ class CreatorsResource(BaseResource):
             body=body,
         )
         return None
+
+    async def update_creator_mass_message(self, creator_user_uuid: str, message_uuid: str, *, body: Mapping[str, Any]) -> None:
+        """
+        Update a creator scheduled mass message
+
+        `PATCH /creators/{creatorUserUuid}/chats/mass-messages/{messageUuid}`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/update-creator-mass-message
+        """
+        await self._client._call_operation(
+            operation_id='update_creator_mass_message',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+                'messageUuid': message_uuid,
+            },
+            body=body,
+        )
+        return None
+
+    async def update_creator_post(self, creator_user_uuid: str, uuid: str, *, body: Mapping[str, Any]) -> UpdateCreatorPostResponse:
+        """
+        Update a post for a creator
+
+        `PATCH /creators/{creatorUserUuid}/posts/{uuid}`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/update-creator-post
+        """
+        return cast(UpdateCreatorPostResponse, await self._client._call_operation(
+            operation_id='update_creator_post',
+            path_params={
+                'creatorUserUuid': creator_user_uuid,
+                'uuid': uuid,
+            },
+            body=body,
+        ))

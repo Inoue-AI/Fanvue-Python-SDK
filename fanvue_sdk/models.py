@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any, Literal, TypeAlias
 
-from pydantic import BaseModel, ConfigDict, TypeAdapter
+from pydantic import BaseModel, ConfigDict, Field, TypeAdapter
 
 from fanvue_sdk.types import ResponseData
 
@@ -15,1324 +15,2876 @@ class FanvueModel(BaseModel):
     model_config = ConfigDict(extra='allow', populate_by_name=True)
 
 
-class GetCurrentUserUsersMeGetResponsesContentApplicationJsonSchemaFanCounts(FanvueModel):
-    followersCount: float
-    subscribersCount: float
-
-
-class GetCurrentUserUsersMeGetResponsesContentApplicationJsonSchemaContentCounts(FanvueModel):
-    imageCount: float
-    videoCount: float
-    audioCount: float
-    postCount: float
-    payToViewPostCount: float
-
-
-class GetCurrentUserGetCurrentUserResponse200(FanvueModel):
-    uuid: str
-    email: str
-    handle: str
-    bio: str
-    displayName: str
-    isCreator: bool
-    createdAt: str
-    updatedAt: str | None
-    avatarUrl: str | None
-    bannerUrl: str | None
-    likesCount: float | None = None
-    fanCounts: GetCurrentUserUsersMeGetResponsesContentApplicationJsonSchemaFanCounts | None = None
-    contentCounts: GetCurrentUserUsersMeGetResponsesContentApplicationJsonSchemaContentCounts | None = None
-
-
-class ListChatsChatsGetResponsesContentApplicationJsonSchemaDataItemsUser(FanvueModel):
-    uuid: str
-    handle: str
-    displayName: str
-    nickname: str | None
-    isTopSpender: bool
-    avatarUrl: str | None
-    registeredAt: str
-
-
-class ListChatsChatsGetResponsesContentApplicationJsonSchemaDataItemsLastMessage(FanvueModel):
-    text: str | None
-    type: str  # e.g. SINGLE_RECIPIENT, TIP, AUTOMATED_FIRST_MESSAGE_REPLY, etc.
-    uuid: str
-    sentAt: str
+class ListAgencyChatsResponsePayloadDataItemLastMessage(FanvueModel):
     hasMedia: bool | None
     mediaType: Literal['image', 'video', 'audio', 'document'] | None
     senderUuid: str
+    sentAt: str | None
     sentByUserId: str | None
+    text: str | None
+    type: Literal['AUTOMATED_CANCELED', 'AUTOMATED_NEW_FOLLOWER', 'AUTOMATED_NEW_PURCHASE', 'AUTOMATED_NEW_SUBSCRIBER', 'AUTOMATED_RE_SUBSCRIBED', 'AUTOMATED_RENEWED', 'AUTOMATED_CHAT_MESSAGE_REPLY', 'AUTOMATED_FIRST_MESSAGE_REPLY', 'CHAT_TEXT_GENERATION', 'CHAT_TEXT_REPLY', 'CHAT_TEXT_REWRITE', 'SINGLE_RECIPIENT', 'TIP', 'VOICE_CALL', 'BROADCAST', 'GHOST_PROMOTION']
+    uuid: str
 
 
-class ListChatsChatsGetResponsesContentApplicationJsonSchemaDataItems(FanvueModel):
-    createdAt: str
-    lastMessageAt: str | None
-    isRead: bool
+class ListAgencyChatsResponsePayloadDataItemUser(FanvueModel):
+    avatarUrl: str | None
+    displayName: str
+    handle: str
+    isTopSpender: bool
+    nickname: str | None
+    registeredAt: str
+    uuid: str
+
+
+class ListAgencyChatsResponsePayloadDataItem(FanvueModel):
+    createdAt: str | None
+    creatorUuid: str
     isMuted: bool
+    isRead: bool
+    lastMessage: ListAgencyChatsResponsePayloadDataItemLastMessage | None
+    lastMessageAt: str | None
     unreadMessagesCount: float
-    user: ListChatsChatsGetResponsesContentApplicationJsonSchemaDataItemsUser
-    lastMessage: ListChatsChatsGetResponsesContentApplicationJsonSchemaDataItemsLastMessage | None
+    user: ListAgencyChatsResponsePayloadDataItemUser
 
 
-class ListChatsChatsGetResponsesContentApplicationJsonSchemaPagination(FanvueModel):
+class ListAgencyChatsResponsePayloadPagination(FanvueModel):
+    hasMore: bool
     page: float
     size: float
+
+
+class ListAgencyChatsResponsePayload(FanvueModel):
+    data: list[ListAgencyChatsResponsePayloadDataItem]
+    pagination: ListAgencyChatsResponsePayloadPagination
+
+
+class CreateCreatorInviteResponsePayload(FanvueModel):
+    message: str
+    success: bool
+
+
+class ListAgencyEarningsByDayResponsePayloadDataItem(FanvueModel):
+    creatorUuid: str
+    currency: str | None
+    date: str
+    gross: int
+    net: int
+
+
+class ListAgencyEarningsByDayResponsePayloadPagination(FanvueModel):
     hasMore: bool
+    page: float
+    size: float
 
 
-class ListChatsListChatsResponse200(FanvueModel):
-    data: list[ListChatsChatsGetResponsesContentApplicationJsonSchemaDataItems]
-    pagination: ListChatsChatsGetResponsesContentApplicationJsonSchemaPagination
+class ListAgencyEarningsByDayResponsePayload(FanvueModel):
+    data: list[ListAgencyEarningsByDayResponsePayloadDataItem]
+    pagination: ListAgencyEarningsByDayResponsePayloadPagination
 
 
-class GetUnreadChatsCountChatsUnreadGetResponsesContentApplicationJsonSchemaUnreadNotifications(FanvueModel):
-    newFollower: float
-    newPostComment: float
-    newPostLike: float
-    newPurchase: float
-    newSubscriber: float
-    newTip: float
-    newPromotion: float
+class GetChatterLeaderboardResponsePayloadDataItem(FanvueModel):
+    activeHours: float
+    avatarUrl: str | None
+    avgResponseMs: float | None
+    chatterName: str
+    chatterUuid: str
+    eph: float
+    goldenRatio: float
+    messages: int
+    ppvsSent: int
+    ppvsUnlocked: int
+    revenue: int
+    unlockRatio: float
 
 
-class GetUnreadChatsCountGetUnreadChatsCountResponse200(FanvueModel):
-    unreadChatsCount: float
-    unreadMessagesCount: float
-    unreadNotifications: GetUnreadChatsCountChatsUnreadGetResponsesContentApplicationJsonSchemaUnreadNotifications
+class GetChatterLeaderboardResponsePayload(FanvueModel):
+    data: list[GetChatterLeaderboardResponsePayloadDataItem]
 
 
-class ListMediaChatsUserUuidMediaGetResponsesContentApplicationJsonSchemaDataItemsVariantsItems(FanvueModel):
-    variantType: Literal['main', 'thumbnail', 'thumbnail_gallery', 'blurred']
-    displayPosition: float
-    url: str | None = None
-    width: float | None
-    height: float | None
-    lengthMs: float | None
+class CreateAgencyInviteResponsePayload(FanvueModel):
+    inviteUuid: str
+    message: str
+    success: bool
 
 
-class ListMediaChatsUserUuidMediaGetResponsesContentApplicationJsonSchemaDataItems(FanvueModel):
+class ListAgencySubscribersResponsePayloadDataItem(FanvueModel):
+    avatarUrl: str | None
+    creatorUuid: str
+    displayName: str
+    expiresAt: str | None
+    handle: str
+    isTopSpender: bool
+    nickname: str | None
+    registeredAt: str
+    subscribedAt: str
     uuid: str
-    messageUuid: str
-    mediaType: Literal['image', 'video', 'audio', 'document', 'unknown']
-    created_at: str
-    sentAt: str
-    ownerUuid: str
-    name: str | None
-    variants: list[ListMediaChatsUserUuidMediaGetResponsesContentApplicationJsonSchemaDataItemsVariantsItems] | None = None
 
 
-class ListMediaListMediaResponse200(FanvueModel):
-    data: list[ListMediaChatsUserUuidMediaGetResponsesContentApplicationJsonSchemaDataItems]
-    nextCursor: str | None
+class ListAgencySubscribersResponsePayloadPagination(FanvueModel):
+    hasMore: bool
+    page: float
+    size: float
 
 
-class CreateChatCreateChatResponse201(FanvueModel):
+class ListAgencySubscribersResponsePayload(FanvueModel):
+    data: list[ListAgencySubscribersResponsePayloadDataItem]
+    pagination: ListAgencySubscribersResponsePayloadPagination
+
+
+class ListAgencySubscribersHistoryResponsePayloadDataItem(FanvueModel):
+    cancelledSubscribersCount: int
+    creatorUuid: str
+    date: str
+    newSubscribersCount: int
+    total: int
+
+
+class ListAgencySubscribersHistoryResponsePayloadPagination(FanvueModel):
+    hasMore: bool
+    page: float
+    size: float
+
+
+class ListAgencySubscribersHistoryResponsePayload(FanvueModel):
+    data: list[ListAgencySubscribersHistoryResponsePayloadDataItem]
+    pagination: ListAgencySubscribersHistoryResponsePayloadPagination
+
+
+class ListTeamMembersResponsePayloadItemCreatorAccessItem(FanvueModel):
+    role: Literal['ADMIN', 'CHATTER']
+    uuid: str
+
+
+class ListTeamMembersResponsePayloadItem(FanvueModel):
+    creatorAccess: list[ListTeamMembersResponsePayloadItemCreatorAccessItem]
+    displayName: str
+    email: str
+    isAdmin: bool
+    nickname: str | None
+    uuid: str
+
+
+class UpdateTeamMemberResponsePayloadCreatorAccessItem(FanvueModel):
+    role: Literal['ADMIN', 'CHATTER']
+    uuid: str
+
+
+class UpdateTeamMemberResponsePayload(FanvueModel):
+    creatorAccess: list[UpdateTeamMemberResponsePayloadCreatorAccessItem]
+    displayName: str
+    email: str
+    isAdmin: bool
+    nickname: str | None
+    uuid: str
+
+
+class GetAppSubscriptionStatusResponsePayloadPricingPlansItem(FanvueModel):
+    billingType: Literal['free', 'one_time', 'recurring']
+    currencyCode: str
+    interval: Literal['monthly', 'yearly'] | None
+    name: str
+    price: float
+    status: Literal['pending_setup', 'active', 'withdrawn']
+    uuid: str
+
+
+class GetAppSubscriptionStatusResponsePayload(FanvueModel):
+    appName: str
+    appUuid: str
+    availability: Literal['complete', 'horizonUnavailable']
+    overallStatus: Literal['notConfigured', 'pendingSetup', 'active', 'withdrawn', 'mixed', 'unavailable']
+    pricingPlans: list[GetAppSubscriptionStatusResponsePayloadPricingPlansItem]
+
+
+class GetAppCurrentUserSubscriptionResponsePayloadManagedCreatorsItem(FanvueModel):
+    cancelAtPeriodEnd: bool
+    currentPeriodEnd: str | None
+    hasActiveSubscription: bool
+    planName: str | None
+    planUuid: str | None
+    status: Literal['active', 'pending', 'cancelled', 'none']
+    userUuid: str
+
+
+class GetAppCurrentUserSubscriptionResponsePayload(FanvueModel):
+    appUuid: str
+    cancelAtPeriodEnd: bool
+    currentPeriodEnd: str | None
+    hasActiveSubscription: bool
+    managedCreators: list[GetAppCurrentUserSubscriptionResponsePayloadManagedCreatorsItem]
+    planName: str | None
+    planUuid: str | None
+    status: Literal['active', 'pending', 'cancelled', 'none']
+    userUuid: str
+
+
+class ListChatsResponsePayloadDataItemLastMessage(FanvueModel):
+    hasMedia: bool | None
+    mediaType: Literal['image', 'video', 'audio', 'document'] | None
+    senderUuid: str
+    sentAt: str | None
+    sentByUserId: str | None
+    text: str | None
+    type: Literal['AUTOMATED_CANCELED', 'AUTOMATED_NEW_FOLLOWER', 'AUTOMATED_NEW_PURCHASE', 'AUTOMATED_NEW_SUBSCRIBER', 'AUTOMATED_RE_SUBSCRIBED', 'AUTOMATED_RENEWED', 'AUTOMATED_CHAT_MESSAGE_REPLY', 'AUTOMATED_FIRST_MESSAGE_REPLY', 'CHAT_TEXT_GENERATION', 'CHAT_TEXT_REPLY', 'CHAT_TEXT_REWRITE', 'SINGLE_RECIPIENT', 'TIP', 'VOICE_CALL', 'BROADCAST', 'GHOST_PROMOTION']
+    uuid: str
+
+
+class ListChatsResponsePayloadDataItemUser(FanvueModel):
+    avatarUrl: str | None
+    displayName: str
+    handle: str
+    isTopSpender: bool
+    nickname: str | None
+    registeredAt: str
+    uuid: str
+
+
+class ListChatsResponsePayloadDataItem(FanvueModel):
+    createdAt: str | None
+    isMuted: bool
+    isRead: bool
+    lastMessage: ListChatsResponsePayloadDataItemLastMessage | None
+    lastMessageAt: str | None
+    unreadMessagesCount: float
+    user: ListChatsResponsePayloadDataItemUser
+
+
+class ListChatsResponsePayloadPagination(FanvueModel):
+    hasMore: bool
+    page: float
+    size: float
+
+
+class ListChatsResponsePayload(FanvueModel):
+    data: list[ListChatsResponsePayloadDataItem]
+    pagination: ListChatsResponsePayloadPagination
+
+
+class CreateChatResponsePayload(FanvueModel):
     message: str
 
 
-class GetBatchStatusesChatsStatusesPostResponsesContentApplicationJsonSchema(FanvueModel):
-    isOnline: bool
-    lastSeenAt: str | None
-
-
-class ListMessagesChatsUserUuidMessagesGetResponsesContentApplicationJsonSchemaDataItemsSender(FanvueModel):
-    uuid: str
-    handle: str
-
-
-class ListMessagesChatsUserUuidMessagesGetResponsesContentApplicationJsonSchemaDataItemsRecipient(FanvueModel):
-    uuid: str | None = None
-    handle: str | None = None
-
-
-class ListMessagesChatsUserUuidMessagesGetResponsesContentApplicationJsonSchemaDataItemsPricingUsd(FanvueModel):
-    price: float
-
-
-class ListMessagesChatsUserUuidMessagesGetResponsesContentApplicationJsonSchemaDataItemsPricing(FanvueModel):
-    USD: ListMessagesChatsUserUuidMessagesGetResponsesContentApplicationJsonSchemaDataItemsPricingUsd
-
-
-class ListMessagesChatsUserUuidMessagesGetResponsesContentApplicationJsonSchemaDataItems(FanvueModel):
-    uuid: str
-    text: str | None
-    sentAt: str | None
-    sender: ListMessagesChatsUserUuidMessagesGetResponsesContentApplicationJsonSchemaDataItemsSender
-    recipient: ListMessagesChatsUserUuidMessagesGetResponsesContentApplicationJsonSchemaDataItemsRecipient
-    hasMedia: bool | None
-    mediaType: Literal['image', 'video', 'audio', 'document'] | None
-    mediaUuids: list[str]
-    type: str  # e.g. SINGLE_RECIPIENT, TIP, AUTOMATED_FIRST_MESSAGE_REPLY, etc.
-    pricing: ListMessagesChatsUserUuidMessagesGetResponsesContentApplicationJsonSchemaDataItemsPricing | None
-    purchasedAt: str | None
-    sentByUserId: str | None
-
-
-class ListMessagesChatsUserUuidMessagesGetResponsesContentApplicationJsonSchemaPagination(FanvueModel):
-    page: float
-    size: float
-    hasMore: bool
-
-
-class ListMessagesListMessagesResponse200(FanvueModel):
-    data: list[ListMessagesChatsUserUuidMessagesGetResponsesContentApplicationJsonSchemaDataItems]
-    pagination: ListMessagesChatsUserUuidMessagesGetResponsesContentApplicationJsonSchemaPagination
-
-
-class SendMessageSendMessageResponse201(FanvueModel):
-    messageUuid: str
-
-
-class SendMassMessageSendMassMessageResponse201(FanvueModel):
-    id: str
-    recipientCount: float
-    createdAt: str
-
-
-class ListTemplateMessagesChatsTemplatesGetResponsesContentApplicationJsonSchemaDataItems(FanvueModel):
-    uuid: str
-    text: str | None
-    price: float | None
-    mediaUuids: list[str]
-    folderName: str | None
-
-
-class ListTemplateMessagesChatsTemplatesGetResponsesContentApplicationJsonSchemaPagination(FanvueModel):
-    page: float
-    size: float
-    hasMore: bool
-
-
-class ListTemplateMessagesListTemplateMessagesResponse200(FanvueModel):
-    data: list[ListTemplateMessagesChatsTemplatesGetResponsesContentApplicationJsonSchemaDataItems]
-    pagination: ListTemplateMessagesChatsTemplatesGetResponsesContentApplicationJsonSchemaPagination
-
-
-class GetTemplateMessageGetTemplateMessageResponse200(FanvueModel):
-    uuid: str
-    text: str | None
-    price: float | None
-    mediaUuids: list[str]
-    folderName: str | None
-
-
-class GetSmartListsChatsListsSmartGetResponsesContentApplicationJsonSchemaItems(FanvueModel):
-    name: str
-    uuid: Literal['subscribers', 'auto_renewing', 'non_renewing', 'followers', 'free_trial_subscribers', 'expired_subscribers', 'spent_more_than_50']
-    count: float
-
-
-class GetSmartListMembersChatsListsSmartUuidGetResponsesContentApplicationJsonSchemaDataItems(FanvueModel):
-    uuid: str
-    displayName: str
-    handle: str
-    isCreator: bool
-
-
-class GetSmartListMembersChatsListsSmartUuidGetResponsesContentApplicationJsonSchemaPagination(FanvueModel):
-    page: float
-    size: float
-    hasMore: bool
-
-
-class GetSmartListMembersGetSmartListMembersResponse200(FanvueModel):
-    data: list[GetSmartListMembersChatsListsSmartUuidGetResponsesContentApplicationJsonSchemaDataItems]
-    pagination: GetSmartListMembersChatsListsSmartUuidGetResponsesContentApplicationJsonSchemaPagination
-
-
-class GetCustomListsChatsListsCustomGetResponsesContentApplicationJsonSchemaDataItems(FanvueModel):
-    uuid: str
-    name: str
+class GetCustomListsResponsePayloadDataItem(FanvueModel):
+    createdAt: str | None
     membersCount: float
-    createdAt: str
+    name: str
+    uuid: str
 
 
-class GetCustomListsChatsListsCustomGetResponsesContentApplicationJsonSchemaPagination(FanvueModel):
+class GetCustomListsResponsePayloadPagination(FanvueModel):
+    hasMore: bool
     page: float
     size: float
-    hasMore: bool
 
 
-class GetCustomListsGetCustomListsResponse200(FanvueModel):
-    data: list[GetCustomListsChatsListsCustomGetResponsesContentApplicationJsonSchemaDataItems]
-    pagination: GetCustomListsChatsListsCustomGetResponsesContentApplicationJsonSchemaPagination
+class GetCustomListsResponsePayload(FanvueModel):
+    data: list[GetCustomListsResponsePayloadDataItem]
+    pagination: GetCustomListsResponsePayloadPagination
 
 
-class GetCustomListMembersChatsListsCustomUuidGetResponsesContentApplicationJsonSchemaDataItems(FanvueModel):
+class CreateCustomListResponsePayload(FanvueModel):
+    createdAt: str | None
+    name: str
     uuid: str
+
+
+class GetCustomListMembersResponsePayloadDataItem(FanvueModel):
     displayName: str
     handle: str
     isCreator: bool
+    uuid: str
 
 
-class GetCustomListMembersChatsListsCustomUuidGetResponsesContentApplicationJsonSchemaPagination(FanvueModel):
+class GetCustomListMembersResponsePayloadPagination(FanvueModel):
+    hasMore: bool
     page: float
     size: float
-    hasMore: bool
 
 
-class GetCustomListMembersGetCustomListMembersResponse200(FanvueModel):
-    data: list[GetCustomListMembersChatsListsCustomUuidGetResponsesContentApplicationJsonSchemaDataItems]
-    pagination: GetCustomListMembersChatsListsCustomUuidGetResponsesContentApplicationJsonSchemaPagination
+class GetCustomListMembersResponsePayload(FanvueModel):
+    data: list[GetCustomListMembersResponsePayloadDataItem]
+    pagination: GetCustomListMembersResponsePayloadPagination
 
 
-class CreateCustomListCreateCustomListResponse201(FanvueModel):
-    uuid: str
-    name: str
-    createdAt: str
-
-
-class AddMembersToCustomListAddMembersToCustomListResponse201(FanvueModel):
+class AddMembersToCustomListResponsePayload(FanvueModel):
     added: float
     skipped: float
 
 
-class GetPostsPostsGetResponsesContentApplicationJsonSchemaDataItemsTips(FanvueModel):
+class GetSmartListsResponsePayloadItem(FanvueModel):
     count: float
-    totalGross: float
-    totalNet: float
+    name: str
+    uuid: Literal['subscribers', 'auto_renewing', 'non_renewing', 'followers', 'free_trial_subscribers', 'expired_subscribers', 'spent_more_than_50', 'muted']
 
 
-class GetPostsPostsGetResponsesContentApplicationJsonSchemaDataItems(FanvueModel):
+class GetSmartListMembersResponsePayloadDataItem(FanvueModel):
+    displayName: str
+    handle: str
+    isCreator: bool
     uuid: str
-    createdAt: str
-    text: str | None
-    price: float | None
-    audience: Literal['subscribers', 'followers-and-subscribers']
-    publishAt: str | None
-    publishedAt: str | None
-    expiresAt: str | None
-    mediaUuids: list[str]
-    isPinned: bool
-    likesCount: float
-    commentsCount: float
-    tips: GetPostsPostsGetResponsesContentApplicationJsonSchemaDataItemsTips
 
 
-class GetPostsPostsGetResponsesContentApplicationJsonSchemaPagination(FanvueModel):
+class GetSmartListMembersResponsePayloadPagination(FanvueModel):
+    hasMore: bool
     page: float
     size: float
-    hasMore: bool
 
 
-class GetPostsGetPostsResponse200(FanvueModel):
-    data: list[GetPostsPostsGetResponsesContentApplicationJsonSchemaDataItems]
-    pagination: GetPostsPostsGetResponsesContentApplicationJsonSchemaPagination
+class GetSmartListMembersResponsePayload(FanvueModel):
+    data: list[GetSmartListMembersResponsePayloadDataItem]
+    pagination: GetSmartListMembersResponsePayloadPagination
 
 
-class GetPostByUuidPostsUuidGetResponsesContentApplicationJsonSchemaTips(FanvueModel):
-    count: float
-    totalGross: float
-    totalNet: float
-
-
-class GetPostByUuidGetPostByUuidResponse200(FanvueModel):
-    uuid: str
-    createdAt: str
-    text: str | None
-    price: float | None
-    audience: Literal['subscribers', 'followers-and-subscribers']
-    publishAt: str | None
-    publishedAt: str | None
-    expiresAt: str | None
-    mediaUuids: list[str]
-    isPinned: bool
-    likesCount: float
-    commentsCount: float
-    tips: GetPostByUuidPostsUuidGetResponsesContentApplicationJsonSchemaTips
-
-
-class GetPostTipsPostsUuidTipsGetResponsesContentApplicationJsonSchemaDataItemsUser(FanvueModel):
-    uuid: str
-    handle: str
-    displayName: str
-    nickname: str | None
-    isTopSpender: bool
-    avatarUrl: str | None
-    registeredAt: str
-
-
-class GetPostTipsPostsUuidTipsGetResponsesContentApplicationJsonSchemaDataItems(FanvueModel):
-    user: GetPostTipsPostsUuidTipsGetResponsesContentApplicationJsonSchemaDataItemsUser | None
-    createdAt: str
-    gross: float
-    net: float
-
-
-class GetPostTipsPostsUuidTipsGetResponsesContentApplicationJsonSchemaPagination(FanvueModel):
-    page: float
-    size: float
-    hasMore: bool
-
-
-class GetPostTipsGetPostTipsResponse200(FanvueModel):
-    data: list[GetPostTipsPostsUuidTipsGetResponsesContentApplicationJsonSchemaDataItems]
-    pagination: GetPostTipsPostsUuidTipsGetResponsesContentApplicationJsonSchemaPagination
-
-
-class GetPostLikesPostsUuidLikesGetResponsesContentApplicationJsonSchemaDataItemsUser(FanvueModel):
-    uuid: str
-    handle: str
-    displayName: str
-    nickname: str | None
-    isTopSpender: bool
-    avatarUrl: str | None
-    registeredAt: str
-
-
-class GetPostLikesPostsUuidLikesGetResponsesContentApplicationJsonSchemaDataItems(FanvueModel):
-    user: GetPostLikesPostsUuidLikesGetResponsesContentApplicationJsonSchemaDataItemsUser | None
-    createdAt: str
-
-
-class GetPostLikesPostsUuidLikesGetResponsesContentApplicationJsonSchemaPagination(FanvueModel):
-    page: float
-    size: float
-    hasMore: bool
-
-
-class GetPostLikesGetPostLikesResponse200(FanvueModel):
-    data: list[GetPostLikesPostsUuidLikesGetResponsesContentApplicationJsonSchemaDataItems]
-    pagination: GetPostLikesPostsUuidLikesGetResponsesContentApplicationJsonSchemaPagination
-
-
-class GetPostCommentsPostsUuidCommentsGetResponsesContentApplicationJsonSchemaDataItemsUser(FanvueModel):
-    uuid: str
-    handle: str
-    displayName: str
-    nickname: str | None
-    isTopSpender: bool
-
-
-class GetPostCommentsPostsUuidCommentsGetResponsesContentApplicationJsonSchemaDataItems(FanvueModel):
-    uuid: str
-    text: str
-    user: GetPostCommentsPostsUuidCommentsGetResponsesContentApplicationJsonSchemaDataItemsUser | None
-    createdAt: str
-    updatedAt: str | None
-
-
-class GetPostCommentsPostsUuidCommentsGetResponsesContentApplicationJsonSchemaPagination(FanvueModel):
-    page: float
-    size: float
-    hasMore: bool
-
-
-class GetPostCommentsGetPostCommentsResponse200(FanvueModel):
-    data: list[GetPostCommentsPostsUuidCommentsGetResponsesContentApplicationJsonSchemaDataItems]
-    pagination: GetPostCommentsPostsUuidCommentsGetResponsesContentApplicationJsonSchemaPagination
-
-
-class CreatePostCreatePostResponse201(FanvueModel):
-    uuid: str
-    createdAt: str
-    text: str | None
-    price: float | None
-    audience: Literal['subscribers', 'followers-and-subscribers']
-    publishAt: str | None
-    publishedAt: str | None
-    expiresAt: str | None
-
-
-class ListFollowersFollowersGetResponsesContentApplicationJsonSchemaDataItems(FanvueModel):
-    uuid: str
-    handle: str
-    displayName: str
-    nickname: str | None
-    isTopSpender: bool
-    avatarUrl: str | None
-    registeredAt: str
-
-
-class ListFollowersFollowersGetResponsesContentApplicationJsonSchemaPagination(FanvueModel):
-    page: float
-    size: float
-    hasMore: bool
-
-
-class ListFollowersListFollowersResponse200(FanvueModel):
-    data: list[ListFollowersFollowersGetResponsesContentApplicationJsonSchemaDataItems]
-    pagination: ListFollowersFollowersGetResponsesContentApplicationJsonSchemaPagination
-
-
-class ListSubscribersSubscribersGetResponsesContentApplicationJsonSchemaDataItems(FanvueModel):
-    uuid: str
-    handle: str
-    displayName: str
-    nickname: str | None
-    isTopSpender: bool
-    avatarUrl: str | None
-    registeredAt: str
-
-
-class ListSubscribersSubscribersGetResponsesContentApplicationJsonSchemaPagination(FanvueModel):
-    page: float
-    size: float
-    hasMore: bool
-
-
-class ListSubscribersListSubscribersResponse200(FanvueModel):
-    data: list[ListSubscribersSubscribersGetResponsesContentApplicationJsonSchemaDataItems]
-    pagination: ListSubscribersSubscribersGetResponsesContentApplicationJsonSchemaPagination
-
-
-class GetEarningsInsightsEarningsGetResponsesContentApplicationJsonSchemaDataItemsUser(FanvueModel):
-    uuid: str
-    handle: str
-    displayName: str
-    nickname: str | None
-    isTopSpender: bool
-
-
-class GetEarningsInsightsEarningsGetResponsesContentApplicationJsonSchemaDataItems(FanvueModel):
-    date: str
-    gross: float
-    net: float
-    currency: str | None
-    source: Literal['all', 'affiliate', 'mediaLink', 'message', 'post', 'referral', 'renewal', 'subscription', 'tip', 'giveaway']
-    messageUuid: str | None = None
-    postUuid: str | None = None
-    user: GetEarningsInsightsEarningsGetResponsesContentApplicationJsonSchemaDataItemsUser | None
-
-
-class GetEarningsGetEarningsResponse200(FanvueModel):
-    data: list[GetEarningsInsightsEarningsGetResponsesContentApplicationJsonSchemaDataItems]
-    nextCursor: str | None
-
-
-class GetTopSpendersInsightsTopSpendersGetResponsesContentApplicationJsonSchemaDataItemsUser(FanvueModel):
-    uuid: str
-    handle: str
-    displayName: str
-    nickname: str | None
-    isTopSpender: bool
-    avatarUrl: str | None
-    registeredAt: str
-
-
-class GetTopSpendersInsightsTopSpendersGetResponsesContentApplicationJsonSchemaDataItems(FanvueModel):
-    gross: float
-    net: float
-    messages: float
-    user: GetTopSpendersInsightsTopSpendersGetResponsesContentApplicationJsonSchemaDataItemsUser
-
-
-class GetTopSpendersInsightsTopSpendersGetResponsesContentApplicationJsonSchemaPagination(FanvueModel):
-    page: float
-    size: float
-    hasMore: bool
-
-
-class GetTopSpendersGetTopSpendersResponse200(FanvueModel):
-    data: list[GetTopSpendersInsightsTopSpendersGetResponsesContentApplicationJsonSchemaDataItems]
-    pagination: GetTopSpendersInsightsTopSpendersGetResponsesContentApplicationJsonSchemaPagination
-
-
-class GetSubscribersInsightsSubscribersGetResponsesContentApplicationJsonSchemaDataItems(FanvueModel):
-    date: str
-    total: float
-    newSubscribersCount: float
-    cancelledSubscribersCount: float
-
-
-class GetSubscribersGetSubscribersResponse200(FanvueModel):
-    data: list[GetSubscribersInsightsSubscribersGetResponsesContentApplicationJsonSchemaDataItems]
-    nextCursor: str | None
-
-
-class GetFanInsightsInsightsFansUserUuidGetResponsesContentApplicationJsonSchemaSpendingTotal(FanvueModel):
-    gross: float
-
-
-class GetFanInsightsInsightsFansUserUuidGetResponsesContentApplicationJsonSchemaSpendingMaxSinglePayment(FanvueModel):
-    gross: float
-
-
-class GetFanInsightsInsightsFansUserUuidGetResponsesContentApplicationJsonSchemaSpendingSources(FanvueModel):
-    gross: float
-
-
-class GetFanInsightsInsightsFansUserUuidGetResponsesContentApplicationJsonSchemaSpending(FanvueModel):
-    lastPurchaseAt: str | None
-    total: GetFanInsightsInsightsFansUserUuidGetResponsesContentApplicationJsonSchemaSpendingTotal
-    maxSinglePayment: GetFanInsightsInsightsFansUserUuidGetResponsesContentApplicationJsonSchemaSpendingMaxSinglePayment
-    sources: dict[str, GetFanInsightsInsightsFansUserUuidGetResponsesContentApplicationJsonSchemaSpendingSources]
-
-
-class GetFanInsightsInsightsFansUserUuidGetResponsesContentApplicationJsonSchemaSubscription(FanvueModel):
+class ListMassMessagesResponsePayloadDataItem(FanvueModel):
     createdAt: str | None
-    renewsAt: str | None
-    autoRenewalEnabled: bool
-
-
-class GetFanInsightsGetFanInsightsResponse200(FanvueModel):
-    status: Literal['subscriber', 'expired', 'follower', 'not_contactable']
-    spending: GetFanInsightsInsightsFansUserUuidGetResponsesContentApplicationJsonSchemaSpending
-    subscription: GetFanInsightsInsightsFansUserUuidGetResponsesContentApplicationJsonSchemaSubscription
-
-
-class GetUserMediaMediaGetResponsesContentApplicationJsonSchemaDataItems0(FanvueModel):
-    uuid: str
-    status: Literal['created', 'processing', 'ready', 'error']
-
-
-class GetUserMediaMediaGetResponsesContentApplicationJsonSchemaDataItemsOneOf1VariantsItems(FanvueModel):
-    uuid: str
-    variantType: Literal['blurred', 'main', 'thumbnail', 'thumbnail_gallery']
-    displayPosition: float
-    url: str | None = None
-    width: float | None
-    height: float | None
-    lengthMs: float | None
-
-
-class GetUserMediaMediaGetResponsesContentApplicationJsonSchemaDataItems1(FanvueModel):
-    uuid: str
-    status: Literal['created', 'processing', 'ready', 'error']
-    createdAt: str
-    url: str | None = None
-    caption: str | None
-    description: str | None
-    name: str | None
-    mediaType: Literal['image', 'video', 'audio', 'document']
-    recommendedPrice: float | None
-    variants: list[GetUserMediaMediaGetResponsesContentApplicationJsonSchemaDataItemsOneOf1VariantsItems] | None = None
-    purchasedByFan: bool | None = None
-
-
-class GetUserMediaMediaGetResponsesContentApplicationJsonSchemaPagination(FanvueModel):
-    page: float
-    size: float
-    hasMore: bool
-
-
-class GetUserMediaGetUserMediaResponse200(FanvueModel):
-    data: list[GetUserMediaMediaGetResponsesContentApplicationJsonSchemaDataItems0 | GetUserMediaMediaGetResponsesContentApplicationJsonSchemaDataItems1]
-    pagination: GetUserMediaMediaGetResponsesContentApplicationJsonSchemaPagination
-
-
-class GetUserMediaByUuidGetUserMediaByUuidResponse2000(FanvueModel):
-    uuid: str
-    status: Literal['created', 'processing', 'ready', 'error']
-
-
-class GetUserMediaByUuidMediaUuidGetResponsesContentApplicationJsonSchemaOneOf1VariantsItems(FanvueModel):
-    uuid: str
-    variantType: Literal['blurred', 'main', 'thumbnail', 'thumbnail_gallery']
-    displayPosition: float
-    url: str | None = None
-    width: float | None
-    height: float | None
-    lengthMs: float | None
-
-
-class GetUserMediaByUuidGetUserMediaByUuidResponse2001(FanvueModel):
-    uuid: str
-    status: Literal['created', 'processing', 'ready', 'error']
-    createdAt: str
-    url: str | None = None
-    caption: str | None
-    description: str | None
-    name: str | None
-    mediaType: Literal['image', 'video', 'audio', 'document']
-    recommendedPrice: float | None
-    variants: list[GetUserMediaByUuidMediaUuidGetResponsesContentApplicationJsonSchemaOneOf1VariantsItems] | None = None
-    purchasedByFan: bool | None = None
-
-
-class CreateUploadSessionCreateUploadSessionResponse200(FanvueModel):
-    mediaUuid: str
-    uploadId: str
-
-
-class GetUploadPartUrlResponsePayload(FanvueModel):
-    pass
-
-
-class CompleteUploadSessionCompleteUploadSessionResponse200(FanvueModel):
-    status: Literal['created', 'processing', 'ready', 'error']
-
-
-class ListTrackingLinksTrackingLinksGetResponsesContentApplicationJsonSchemaDataItemsEngagement(FanvueModel):
-    acquiredSubscribers: float
-    acquiredFollowers: float
-
-
-class ListTrackingLinksTrackingLinksGetResponsesContentApplicationJsonSchemaDataItemsEarnings(FanvueModel):
-    totalGross: float
-    totalNet: float
-
-
-class ListTrackingLinksTrackingLinksGetResponsesContentApplicationJsonSchemaDataItems(FanvueModel):
-    uuid: str
-    name: str
-    linkUrl: str
-    externalSocialPlatform: Literal['facebook', 'instagram', 'other', 'reddit', 'snapchat', 'tiktok', 'twitter', 'youtube']
-    createdAt: str
-    clicks: float
-    engagement: ListTrackingLinksTrackingLinksGetResponsesContentApplicationJsonSchemaDataItemsEngagement
-    earnings: ListTrackingLinksTrackingLinksGetResponsesContentApplicationJsonSchemaDataItemsEarnings | None
-
-
-class ListTrackingLinksListTrackingLinksResponse200(FanvueModel):
-    data: list[ListTrackingLinksTrackingLinksGetResponsesContentApplicationJsonSchemaDataItems]
-    nextCursor: str | None
-
-
-class CreateTrackingLinkTrackingLinksPostResponsesContentApplicationJsonSchemaEngagement(FanvueModel):
-    acquiredSubscribers: float
-    acquiredFollowers: float
-
-
-class CreateTrackingLinkTrackingLinksPostResponsesContentApplicationJsonSchemaEarnings(FanvueModel):
-    totalGross: float
-    totalNet: float
-
-
-class CreateTrackingLinkCreateTrackingLinkResponse201(FanvueModel):
-    uuid: str
-    name: str
-    linkUrl: str
-    externalSocialPlatform: Literal['facebook', 'instagram', 'other', 'reddit', 'snapchat', 'tiktok', 'twitter', 'youtube']
-    createdAt: str
-    clicks: float
-    engagement: CreateTrackingLinkTrackingLinksPostResponsesContentApplicationJsonSchemaEngagement
-    earnings: CreateTrackingLinkTrackingLinksPostResponsesContentApplicationJsonSchemaEarnings | None
-
-
-class ListVaultFoldersVaultFoldersGetResponsesContentApplicationJsonSchemaDataItems(FanvueModel):
-    name: str
-    createdAt: str
-    mediaCount: float
-
-
-class ListVaultFoldersVaultFoldersGetResponsesContentApplicationJsonSchemaPagination(FanvueModel):
-    page: float
-    size: float
-    hasMore: bool
-
-
-class ListVaultFoldersListVaultFoldersResponse200(FanvueModel):
-    data: list[ListVaultFoldersVaultFoldersGetResponsesContentApplicationJsonSchemaDataItems]
-    pagination: ListVaultFoldersVaultFoldersGetResponsesContentApplicationJsonSchemaPagination
-
-
-class CreateVaultFolderCreateVaultFolderResponse201(FanvueModel):
-    name: str
-    createdAt: str
-    mediaCount: float
-
-
-class GetVaultFolderGetVaultFolderResponse200(FanvueModel):
-    name: str
-    createdAt: str
-    mediaCount: float
-
-
-class ListVaultFolderMediaVaultFoldersFolderNameMediaGetResponsesContentApplicationJsonSchemaDataItems(FanvueModel):
-    uuid: str
-    name: str | None
-    createdAt: str
-    mediaType: str
-
-
-class ListVaultFolderMediaVaultFoldersFolderNameMediaGetResponsesContentApplicationJsonSchemaPagination(FanvueModel):
-    page: float
-    size: float
-    hasMore: bool
-
-
-class ListVaultFolderMediaListVaultFolderMediaResponse200(FanvueModel):
-    data: list[ListVaultFolderMediaVaultFoldersFolderNameMediaGetResponsesContentApplicationJsonSchemaDataItems]
-    pagination: ListVaultFolderMediaVaultFoldersFolderNameMediaGetResponsesContentApplicationJsonSchemaPagination
-
-
-class AttachMediaToVaultFolderAttachMediaToVaultFolderResponse201(FanvueModel):
-    addedCount: float
-
-
-class ListCreatorsCreatorsGetResponsesContentApplicationJsonSchemaDataItems(FanvueModel):
-    uuid: str
-    handle: str
-    displayName: str
-    nickname: str | None
-    isTopSpender: bool
-    avatarUrl: str | None
-    registeredAt: str
-    role: str | None = None
-
-
-class ListCreatorsCreatorsGetResponsesContentApplicationJsonSchemaPagination(FanvueModel):
-    page: float
-    size: float
-    hasMore: bool
-
-
-class ListCreatorsListCreatorsResponse200(FanvueModel):
-    data: list[ListCreatorsCreatorsGetResponsesContentApplicationJsonSchemaDataItems]
-    pagination: ListCreatorsCreatorsGetResponsesContentApplicationJsonSchemaPagination
-
-
-class ListTeamMembersAgenciesTeamMembersGetResponsesContentApplicationJsonSchemaItemsCreatorAccessItems(FanvueModel):
-    uuid: str
-    role: Literal['ADMIN', 'CHATTER']
-
-
-class ListTeamMembersAgenciesTeamMembersGetResponsesContentApplicationJsonSchemaItems(FanvueModel):
-    uuid: str
-    isAdmin: bool
-    nickname: str | None
-    email: str
-    displayName: str
-    creatorAccess: list[ListTeamMembersAgenciesTeamMembersGetResponsesContentApplicationJsonSchemaItemsCreatorAccessItems]
-
-
-class UpdateTeamMemberAgenciesTeamMembersUserIdPutResponsesContentApplicationJsonSchemaCreatorAccessItems(FanvueModel):
-    uuid: str
-    role: Literal['ADMIN', 'CHATTER']
-
-
-class UpdateTeamMemberUpdateTeamMemberResponse200(FanvueModel):
-    uuid: str
-    isAdmin: bool
-    nickname: str | None
-    email: str
-    displayName: str
-    creatorAccess: list[UpdateTeamMemberAgenciesTeamMembersUserIdPutResponsesContentApplicationJsonSchemaCreatorAccessItems]
-
-
-class ListCreatorFollowersCreatorsCreatorUserUuidFollowersGetResponsesContentApplicationJsonSchemaDataItems(FanvueModel):
-    uuid: str
-    handle: str
-    displayName: str
-    nickname: str | None
-    isTopSpender: bool
-    avatarUrl: str | None
-    registeredAt: str
-
-
-class ListCreatorFollowersCreatorsCreatorUserUuidFollowersGetResponsesContentApplicationJsonSchemaPagination(FanvueModel):
-    page: float
-    size: float
-    hasMore: bool
-
-
-class ListCreatorFollowersListCreatorFollowersResponse200(FanvueModel):
-    data: list[ListCreatorFollowersCreatorsCreatorUserUuidFollowersGetResponsesContentApplicationJsonSchemaDataItems]
-    pagination: ListCreatorFollowersCreatorsCreatorUserUuidFollowersGetResponsesContentApplicationJsonSchemaPagination
-
-
-class ListCreatorSubscribersCreatorsCreatorUserUuidSubscribersGetResponsesContentApplicationJsonSchemaDataItems(FanvueModel):
-    uuid: str
-    handle: str
-    displayName: str
-    nickname: str | None
-    isTopSpender: bool
-    avatarUrl: str | None
-    registeredAt: str
-
-
-class ListCreatorSubscribersCreatorsCreatorUserUuidSubscribersGetResponsesContentApplicationJsonSchemaPagination(FanvueModel):
-    page: float
-    size: float
-    hasMore: bool
-
-
-class ListCreatorSubscribersListCreatorSubscribersResponse200(FanvueModel):
-    data: list[ListCreatorSubscribersCreatorsCreatorUserUuidSubscribersGetResponsesContentApplicationJsonSchemaDataItems]
-    pagination: ListCreatorSubscribersCreatorsCreatorUserUuidSubscribersGetResponsesContentApplicationJsonSchemaPagination
-
-
-class ListCreatorChatsCreatorsCreatorUserUuidChatsGetResponsesContentApplicationJsonSchemaDataItemsUser(FanvueModel):
-    uuid: str
-    handle: str
-    displayName: str
-    nickname: str | None
-    isTopSpender: bool
-    avatarUrl: str | None
-    registeredAt: str
-
-
-class ListCreatorChatsCreatorsCreatorUserUuidChatsGetResponsesContentApplicationJsonSchemaDataItemsLastMessage(FanvueModel):
+    mediaUuids: list[str]
+    price: float | None
+    publishedAt: str | None
+    purchaseCount: float
+    recipientCount: float
+    scheduledAt: str | None
+    status: Literal['SENT', 'UNSENT', 'SENDING', 'FAILED', 'MODERATED', 'SCHEDULED']
     text: str | None
-    type: str  # e.g. SINGLE_RECIPIENT, TIP, AUTOMATED_FIRST_MESSAGE_REPLY, etc.
+    totalRevenue: float
     uuid: str
-    sentAt: str
-    hasMedia: bool | None
-    mediaType: Literal['image', 'video', 'audio', 'document'] | None
-    senderUuid: str
-    sentByUserId: str | None
+    viewCount: float
 
 
-class ListCreatorChatsCreatorsCreatorUserUuidChatsGetResponsesContentApplicationJsonSchemaDataItems(FanvueModel):
-    createdAt: str
-    lastMessageAt: str | None
-    isRead: bool
-    isMuted: bool
-    unreadMessagesCount: float
-    user: ListCreatorChatsCreatorsCreatorUserUuidChatsGetResponsesContentApplicationJsonSchemaDataItemsUser
-    lastMessage: ListCreatorChatsCreatorsCreatorUserUuidChatsGetResponsesContentApplicationJsonSchemaDataItemsLastMessage | None
-
-
-class ListCreatorChatsCreatorsCreatorUserUuidChatsGetResponsesContentApplicationJsonSchemaPagination(FanvueModel):
+class ListMassMessagesResponsePayloadPagination(FanvueModel):
+    hasMore: bool
     page: float
     size: float
-    hasMore: bool
 
 
-class ListCreatorChatsListCreatorChatsResponse200(FanvueModel):
-    data: list[ListCreatorChatsCreatorsCreatorUserUuidChatsGetResponsesContentApplicationJsonSchemaDataItems]
-    pagination: ListCreatorChatsCreatorsCreatorUserUuidChatsGetResponsesContentApplicationJsonSchemaPagination
+class ListMassMessagesResponsePayload(FanvueModel):
+    data: list[ListMassMessagesResponsePayloadDataItem]
+    pagination: ListMassMessagesResponsePayloadPagination
 
 
-class CreateCreatorChatCreateCreatorChatResponse201(FanvueModel):
-    message: str
-
-
-class GetCreatorSmartListsCreatorsCreatorUserUuidChatsListsSmartGetResponsesContentApplicationJsonSchemaItems(FanvueModel):
-    name: str
-    uuid: Literal['subscribers', 'auto_renewing', 'non_renewing', 'followers', 'free_trial_subscribers', 'expired_subscribers', 'spent_more_than_50']
-    count: float
-
-
-class GetCreatorSmartListMembersCreatorsCreatorUserUuidChatsListsSmartUuidGetResponsesContentApplicationJsonSchemaDataItems(FanvueModel):
-    uuid: str
-    displayName: str
-    handle: str
-    isCreator: bool
-
-
-class GetCreatorSmartListMembersCreatorsCreatorUserUuidChatsListsSmartUuidGetResponsesContentApplicationJsonSchemaPagination(FanvueModel):
-    page: float
-    size: float
-    hasMore: bool
-
-
-class GetCreatorSmartListMembersGetCreatorSmartListMembersResponse200(FanvueModel):
-    data: list[GetCreatorSmartListMembersCreatorsCreatorUserUuidChatsListsSmartUuidGetResponsesContentApplicationJsonSchemaDataItems]
-    pagination: GetCreatorSmartListMembersCreatorsCreatorUserUuidChatsListsSmartUuidGetResponsesContentApplicationJsonSchemaPagination
-
-
-class GetCreatorCustomListsCreatorsCreatorUserUuidChatsListsCustomGetResponsesContentApplicationJsonSchemaDataItems(FanvueModel):
-    uuid: str
-    name: str
-    membersCount: float
-    createdAt: str
-
-
-class GetCreatorCustomListsCreatorsCreatorUserUuidChatsListsCustomGetResponsesContentApplicationJsonSchemaPagination(FanvueModel):
-    page: float
-    size: float
-    hasMore: bool
-
-
-class GetCreatorCustomListsGetCreatorCustomListsResponse200(FanvueModel):
-    data: list[GetCreatorCustomListsCreatorsCreatorUserUuidChatsListsCustomGetResponsesContentApplicationJsonSchemaDataItems]
-    pagination: GetCreatorCustomListsCreatorsCreatorUserUuidChatsListsCustomGetResponsesContentApplicationJsonSchemaPagination
-
-
-class GetCreatorCustomListMembersCreatorsCreatorUserUuidChatsListsCustomUuidGetResponsesContentApplicationJsonSchemaDataItems(FanvueModel):
-    uuid: str
-    displayName: str
-    handle: str
-    isCreator: bool
-
-
-class GetCreatorCustomListMembersCreatorsCreatorUserUuidChatsListsCustomUuidGetResponsesContentApplicationJsonSchemaPagination(FanvueModel):
-    page: float
-    size: float
-    hasMore: bool
-
-
-class GetCreatorCustomListMembersGetCreatorCustomListMembersResponse200(FanvueModel):
-    data: list[GetCreatorCustomListMembersCreatorsCreatorUserUuidChatsListsCustomUuidGetResponsesContentApplicationJsonSchemaDataItems]
-    pagination: GetCreatorCustomListMembersCreatorsCreatorUserUuidChatsListsCustomUuidGetResponsesContentApplicationJsonSchemaPagination
-
-
-class SendCreatorMassMessageSendCreatorMassMessageResponse201(FanvueModel):
+class SendMassMessageResponsePayload(FanvueModel):
+    createdAt: str | None
     id: str
     recipientCount: float
-    createdAt: str
 
 
-class SendCreatorMessageSendCreatorMessageResponse201(FanvueModel):
-    messageUuid: str
-
-
-class ListCreatorMessagesCreatorsCreatorUserUuidChatsUserUuidMessagesGetResponsesContentApplicationJsonSchemaDataItemsSender(FanvueModel):
-    uuid: str
-    handle: str
-
-
-class ListCreatorMessagesCreatorsCreatorUserUuidChatsUserUuidMessagesGetResponsesContentApplicationJsonSchemaDataItemsRecipient(FanvueModel):
-    uuid: str | None = None
-    handle: str | None = None
-
-
-class ListCreatorMessagesCreatorsCreatorUserUuidChatsUserUuidMessagesGetResponsesContentApplicationJsonSchemaDataItemsPricingUsd(FanvueModel):
+class MessagesBatchResponsePayloadByChatValueOption1MessagesItemPricingUsd(FanvueModel):
     price: float
 
 
-class ListCreatorMessagesCreatorsCreatorUserUuidChatsUserUuidMessagesGetResponsesContentApplicationJsonSchemaDataItemsPricing(FanvueModel):
-    USD: ListCreatorMessagesCreatorsCreatorUserUuidChatsUserUuidMessagesGetResponsesContentApplicationJsonSchemaDataItemsPricingUsd
+class MessagesBatchResponsePayloadByChatValueOption1MessagesItemPricing(FanvueModel):
+    USD: MessagesBatchResponsePayloadByChatValueOption1MessagesItemPricingUsd
 
 
-class ListCreatorMessagesCreatorsCreatorUserUuidChatsUserUuidMessagesGetResponsesContentApplicationJsonSchemaDataItems(FanvueModel):
+class MessagesBatchResponsePayloadByChatValueOption1MessagesItemRecipient(FanvueModel):
+    handle: str | None = None
+    uuid: str | None = None
+
+
+class MessagesBatchResponsePayloadByChatValueOption1MessagesItemSender(FanvueModel):
+    handle: str
     uuid: str
-    text: str | None
-    sentAt: str | None
-    sender: ListCreatorMessagesCreatorsCreatorUserUuidChatsUserUuidMessagesGetResponsesContentApplicationJsonSchemaDataItemsSender
-    recipient: ListCreatorMessagesCreatorsCreatorUserUuidChatsUserUuidMessagesGetResponsesContentApplicationJsonSchemaDataItemsRecipient
+
+
+class MessagesBatchResponsePayloadByChatValueOption1MessagesItem(FanvueModel):
     hasMedia: bool | None
+    isRead: bool
     mediaType: Literal['image', 'video', 'audio', 'document'] | None
     mediaUuids: list[str]
-    type: str  # e.g. SINGLE_RECIPIENT, TIP, AUTOMATED_FIRST_MESSAGE_REPLY, etc.
-    pricing: ListCreatorMessagesCreatorsCreatorUserUuidChatsUserUuidMessagesGetResponsesContentApplicationJsonSchemaDataItemsPricing | None
+    pricing: MessagesBatchResponsePayloadByChatValueOption1MessagesItemPricing | None
     purchasedAt: str | None
+    recipient: MessagesBatchResponsePayloadByChatValueOption1MessagesItemRecipient
+    sender: MessagesBatchResponsePayloadByChatValueOption1MessagesItemSender
+    sentAt: str | None
     sentByUserId: str | None
+    text: str | None
+    type: Literal['AUTOMATED_CANCELED', 'AUTOMATED_NEW_FOLLOWER', 'AUTOMATED_NEW_PURCHASE', 'AUTOMATED_NEW_SUBSCRIBER', 'AUTOMATED_RE_SUBSCRIBED', 'AUTOMATED_RENEWED', 'AUTOMATED_CHAT_MESSAGE_REPLY', 'AUTOMATED_FIRST_MESSAGE_REPLY', 'CHAT_TEXT_GENERATION', 'CHAT_TEXT_REPLY', 'CHAT_TEXT_REWRITE', 'SINGLE_RECIPIENT', 'TIP', 'VOICE_CALL']
+    uuid: str
 
 
-class ListCreatorMessagesCreatorsCreatorUserUuidChatsUserUuidMessagesGetResponsesContentApplicationJsonSchemaPagination(FanvueModel):
+class MessagesBatchResponsePayloadByChatValueOption1(FanvueModel):
+    hasMore: bool
+    messages: list[MessagesBatchResponsePayloadByChatValueOption1MessagesItem]
+    oldestMessageUuid: str | None
+
+
+class MessagesBatchResponsePayloadByChatValueOption2(FanvueModel):
+    error: Literal['forbidden', 'not_found', 'internal']
+
+
+class MessagesBatchResponsePayload(FanvueModel):
+    byChat: dict[str, MessagesBatchResponsePayloadByChatValueOption1 | MessagesBatchResponsePayloadByChatValueOption2]
+
+
+class GetBatchStatusesResponsePayloadValue(FanvueModel):
+    isOnline: bool
+    lastSeenAt: str | None
+
+
+class ListTemplateMessagesResponsePayloadDataItem(FanvueModel):
+    folderName: str | None
+    mediaUuids: list[str]
+    price: float | None
+    text: str | None
+    uuid: str
+
+
+class ListTemplateMessagesResponsePayloadPagination(FanvueModel):
+    hasMore: bool
     page: float
     size: float
-    hasMore: bool
 
 
-class ListCreatorMessagesListCreatorMessagesResponse200(FanvueModel):
-    data: list[ListCreatorMessagesCreatorsCreatorUserUuidChatsUserUuidMessagesGetResponsesContentApplicationJsonSchemaDataItems]
-    pagination: ListCreatorMessagesCreatorsCreatorUserUuidChatsUserUuidMessagesGetResponsesContentApplicationJsonSchemaPagination
+class ListTemplateMessagesResponsePayload(FanvueModel):
+    data: list[ListTemplateMessagesResponsePayloadDataItem]
+    pagination: ListTemplateMessagesResponsePayloadPagination
 
 
-class ListCreatorChatMediaCreatorsCreatorUserUuidChatsUserUuidMediaGetResponsesContentApplicationJsonSchemaDataItemsVariantsItems(FanvueModel):
+class GetTemplateMessageResponsePayload(FanvueModel):
+    folderName: str | None
+    mediaUuids: list[str]
+    price: float | None
+    text: str | None
+    uuid: str
+
+
+class GetUnreadChatsCountResponsePayloadUnreadNotifications(FanvueModel):
+    newFollower: float
+    newPostComment: float
+    newPostLike: float
+    newPromotion: float
+    newPurchase: float
+    newSubscriber: float
+    newTip: float
+
+
+class GetUnreadChatsCountResponsePayload(FanvueModel):
+    unreadChatsCount: float
+    unreadMessagesCount: float
+    unreadNotifications: GetUnreadChatsCountResponsePayloadUnreadNotifications
+
+
+class ListMediaResponsePayloadDataItemVariantsItem(FanvueModel):
+    displayPosition: float
+    height: float | None
+    lengthMs: float | None
+    url: str | None = None
     variantType: Literal['main', 'thumbnail', 'thumbnail_gallery', 'blurred']
-    displayPosition: float
-    url: str | None = None
     width: float | None
-    height: float | None
-    lengthMs: float | None
 
 
-class ListCreatorChatMediaCreatorsCreatorUserUuidChatsUserUuidMediaGetResponsesContentApplicationJsonSchemaDataItems(FanvueModel):
-    uuid: str
-    messageUuid: str
+class ListMediaResponsePayloadDataItem(FanvueModel):
+    created_at: str | None
     mediaType: Literal['image', 'video', 'audio', 'document', 'unknown']
-    created_at: str
-    sentAt: str
+    messageUuid: str
+    name: str | None
     ownerUuid: str
+    sentAt: str | None
+    uuid: str
+    variants: list[ListMediaResponsePayloadDataItemVariantsItem] | None = None
+
+
+class ListMediaResponsePayload(FanvueModel):
+    data: list[ListMediaResponsePayloadDataItem]
+    nextCursor: str | None
+
+
+class SendMessageResponsePayload(FanvueModel):
+    messageUuid: str
+
+
+class ListMessagesResponsePayloadDataItemPricingUsd(FanvueModel):
+    price: float
+
+
+class ListMessagesResponsePayloadDataItemPricing(FanvueModel):
+    USD: ListMessagesResponsePayloadDataItemPricingUsd
+
+
+class ListMessagesResponsePayloadDataItemRecipient(FanvueModel):
+    handle: str | None = None
+    uuid: str | None = None
+
+
+class ListMessagesResponsePayloadDataItemSender(FanvueModel):
+    handle: str
+    uuid: str
+
+
+class ListMessagesResponsePayloadDataItem(FanvueModel):
+    hasMedia: bool | None
+    isRead: bool
+    mediaType: Literal['image', 'video', 'audio', 'document'] | None
+    mediaUuids: list[str]
+    pricing: ListMessagesResponsePayloadDataItemPricing | None
+    purchasedAt: str | None
+    recipient: ListMessagesResponsePayloadDataItemRecipient
+    sender: ListMessagesResponsePayloadDataItemSender
+    sentAt: str | None
+    sentByUserId: str | None
+    text: str | None
+    type: Literal['AUTOMATED_CANCELED', 'AUTOMATED_NEW_FOLLOWER', 'AUTOMATED_NEW_PURCHASE', 'AUTOMATED_NEW_SUBSCRIBER', 'AUTOMATED_RE_SUBSCRIBED', 'AUTOMATED_RENEWED', 'AUTOMATED_CHAT_MESSAGE_REPLY', 'AUTOMATED_FIRST_MESSAGE_REPLY', 'CHAT_TEXT_GENERATION', 'CHAT_TEXT_REPLY', 'CHAT_TEXT_REWRITE', 'SINGLE_RECIPIENT', 'TIP', 'VOICE_CALL']
+    uuid: str
+
+
+class ListMessagesResponsePayloadPagination(FanvueModel):
+    hasMore: bool
+    page: float
+    size: float
+
+
+class ListMessagesResponsePayload(FanvueModel):
+    data: list[ListMessagesResponsePayloadDataItem]
+    pagination: ListMessagesResponsePayloadPagination
+
+
+class GetMessageMediaByUuidsResponsePayloadErrorsItem(FanvueModel):
+    code: Literal['NOT_IN_MESSAGE', 'INTERNAL']
+    mediaUuid: str
+    message: str
+
+
+class GetMessageMediaByUuidsResponsePayloadResultsValueVariantsItem(FanvueModel):
+    displayPosition: float
+    height: float | None
+    lengthMs: float | None
+    url: str | None = None
+    variantType: Literal['main', 'thumbnail', 'thumbnail_gallery', 'blurred']
+    width: float | None
+
+
+class GetMessageMediaByUuidsResponsePayloadResultsValue(FanvueModel):
+    created_at: str | None
+    mediaType: Literal['image', 'video', 'audio', 'document', 'unknown']
+    messageUuid: str
     name: str | None
-    variants: list[ListCreatorChatMediaCreatorsCreatorUserUuidChatsUserUuidMediaGetResponsesContentApplicationJsonSchemaDataItemsVariantsItems] | None = None
-
-
-class ListCreatorChatMediaListCreatorChatMediaResponse200(FanvueModel):
-    data: list[ListCreatorChatMediaCreatorsCreatorUserUuidChatsUserUuidMediaGetResponsesContentApplicationJsonSchemaDataItems]
-    nextCursor: str | None
-
-
-class GetCreatorEarningsCreatorsCreatorUserUuidInsightsEarningsGetResponsesContentApplicationJsonSchemaDataItemsUser(FanvueModel):
+    ownerUuid: str
+    sentAt: str | None
     uuid: str
-    handle: str
-    displayName: str
-    nickname: str | None
-    isTopSpender: bool
+    variants: list[GetMessageMediaByUuidsResponsePayloadResultsValueVariantsItem] | None = None
 
 
-class GetCreatorEarningsCreatorsCreatorUserUuidInsightsEarningsGetResponsesContentApplicationJsonSchemaDataItems(FanvueModel):
-    date: str
-    gross: float
-    net: float
-    currency: str | None
-    source: Literal['all', 'affiliate', 'mediaLink', 'message', 'post', 'referral', 'renewal', 'subscription', 'tip', 'giveaway']
-    messageUuid: str | None = None
-    postUuid: str | None = None
-    user: GetCreatorEarningsCreatorsCreatorUserUuidInsightsEarningsGetResponsesContentApplicationJsonSchemaDataItemsUser | None
+class GetMessageMediaByUuidsResponsePayload(FanvueModel):
+    errors: list[GetMessageMediaByUuidsResponsePayloadErrorsItem]
+    results: dict[str, GetMessageMediaByUuidsResponsePayloadResultsValue | None]
 
 
-class GetCreatorEarningsGetCreatorEarningsResponse200(FanvueModel):
-    data: list[GetCreatorEarningsCreatorsCreatorUserUuidInsightsEarningsGetResponsesContentApplicationJsonSchemaDataItems]
-    nextCursor: str | None
-
-
-class GetCreatorTopSpendersCreatorsCreatorUserUuidInsightsTopSpendersGetResponsesContentApplicationJsonSchemaDataItemsUser(FanvueModel):
+class ListCollectionsResponsePayloadDataItem(FanvueModel):
+    createdAt: str | None
+    label: str
     uuid: str
-    handle: str
-    displayName: str
-    nickname: str | None
-    isTopSpender: bool
+
+
+class ListCollectionsResponsePayloadPagination(FanvueModel):
+    hasMore: bool
+    page: float
+    size: float
+
+
+class ListCollectionsResponsePayload(FanvueModel):
+    data: list[ListCollectionsResponsePayloadDataItem]
+    pagination: ListCollectionsResponsePayloadPagination
+
+
+class CreateCollectionResponsePayload(FanvueModel):
+    createdAt: str | None
+    label: str
+    uuid: str
+
+
+class ListCreatorsResponsePayloadDataItem(FanvueModel):
     avatarUrl: str | None
+    displayName: str
+    handle: str
+    isTopSpender: bool
+    nickname: str | None
     registeredAt: str
+    role: str | None = None
+    uuid: str
 
 
-class GetCreatorTopSpendersCreatorsCreatorUserUuidInsightsTopSpendersGetResponsesContentApplicationJsonSchemaDataItems(FanvueModel):
-    gross: float
-    net: float
-    messages: float
-    user: GetCreatorTopSpendersCreatorsCreatorUserUuidInsightsTopSpendersGetResponsesContentApplicationJsonSchemaDataItemsUser
-
-
-class GetCreatorTopSpendersCreatorsCreatorUserUuidInsightsTopSpendersGetResponsesContentApplicationJsonSchemaPagination(FanvueModel):
+class ListCreatorsResponsePayloadPagination(FanvueModel):
+    hasMore: bool
     page: float
     size: float
-    hasMore: bool
 
 
-class GetCreatorTopSpendersGetCreatorTopSpendersResponse200(FanvueModel):
-    data: list[GetCreatorTopSpendersCreatorsCreatorUserUuidInsightsTopSpendersGetResponsesContentApplicationJsonSchemaDataItems]
-    pagination: GetCreatorTopSpendersCreatorsCreatorUserUuidInsightsTopSpendersGetResponsesContentApplicationJsonSchemaPagination
+class ListCreatorsResponsePayload(FanvueModel):
+    data: list[ListCreatorsResponsePayloadDataItem]
+    pagination: ListCreatorsResponsePayloadPagination
 
 
-class GetCreatorSubscribersCreatorsCreatorUserUuidInsightsSubscribersGetResponsesContentApplicationJsonSchemaDataItems(FanvueModel):
-    date: str
+class GetCreatorAccountResponsePayloadAccountEarnings(FanvueModel):
+    availableBalance: float
+    lastPayoutAt: str | None
     total: float
-    newSubscribersCount: float
-    cancelledSubscribersCount: float
 
 
-class GetCreatorSubscribersGetCreatorSubscribersResponse200(FanvueModel):
-    data: list[GetCreatorSubscribersCreatorsCreatorUserUuidInsightsSubscribersGetResponsesContentApplicationJsonSchemaDataItems]
+class GetCreatorAccountResponsePayloadAccountFans(FanvueModel):
+    followers: float
+    subscribers: float
+
+
+class GetCreatorAccountResponsePayloadAccount(FanvueModel):
+    earnings: GetCreatorAccountResponsePayloadAccountEarnings
+    fans: GetCreatorAccountResponsePayloadAccountFans
+    status: Literal['active', 'suspended']
+
+
+class GetCreatorAccountResponsePayload(FanvueModel):
+    account: GetCreatorAccountResponsePayloadAccount
+    avatarUrl: str | None
+    bannerUrl: str | None
+    bio: str
+    createdAt: str
+    displayName: str
+    email: str
+    handle: str
+    isCreator: bool
+    updatedAt: str | None
+    uuid: str
+
+
+class ListCreatorChatsResponsePayloadDataItemLastMessage(FanvueModel):
+    hasMedia: bool | None
+    mediaType: Literal['image', 'video', 'audio', 'document'] | None
+    senderUuid: str
+    sentAt: str | None
+    sentByUserId: str | None
+    text: str | None
+    type: Literal['AUTOMATED_CANCELED', 'AUTOMATED_NEW_FOLLOWER', 'AUTOMATED_NEW_PURCHASE', 'AUTOMATED_NEW_SUBSCRIBER', 'AUTOMATED_RE_SUBSCRIBED', 'AUTOMATED_RENEWED', 'AUTOMATED_CHAT_MESSAGE_REPLY', 'AUTOMATED_FIRST_MESSAGE_REPLY', 'CHAT_TEXT_GENERATION', 'CHAT_TEXT_REPLY', 'CHAT_TEXT_REWRITE', 'SINGLE_RECIPIENT', 'TIP', 'VOICE_CALL', 'BROADCAST', 'GHOST_PROMOTION']
+    uuid: str
+
+
+class ListCreatorChatsResponsePayloadDataItemUser(FanvueModel):
+    avatarUrl: str | None
+    displayName: str
+    handle: str
+    isTopSpender: bool
+    nickname: str | None
+    registeredAt: str
+    uuid: str
+
+
+class ListCreatorChatsResponsePayloadDataItem(FanvueModel):
+    createdAt: str | None
+    isMuted: bool
+    isRead: bool
+    lastMessage: ListCreatorChatsResponsePayloadDataItemLastMessage | None
+    lastMessageAt: str | None
+    unreadMessagesCount: float
+    user: ListCreatorChatsResponsePayloadDataItemUser
+
+
+class ListCreatorChatsResponsePayloadPagination(FanvueModel):
+    hasMore: bool
+    page: float
+    size: float
+
+
+class ListCreatorChatsResponsePayload(FanvueModel):
+    data: list[ListCreatorChatsResponsePayloadDataItem]
+    pagination: ListCreatorChatsResponsePayloadPagination
+
+
+class CreateCreatorChatResponsePayload(FanvueModel):
+    message: str
+
+
+class GetCreatorCustomListsResponsePayloadDataItem(FanvueModel):
+    createdAt: str | None
+    membersCount: float
+    name: str
+    uuid: str
+
+
+class GetCreatorCustomListsResponsePayloadPagination(FanvueModel):
+    hasMore: bool
+    page: float
+    size: float
+
+
+class GetCreatorCustomListsResponsePayload(FanvueModel):
+    data: list[GetCreatorCustomListsResponsePayloadDataItem]
+    pagination: GetCreatorCustomListsResponsePayloadPagination
+
+
+class GetCreatorCustomListMembersResponsePayloadDataItem(FanvueModel):
+    displayName: str
+    handle: str
+    isCreator: bool
+    uuid: str
+
+
+class GetCreatorCustomListMembersResponsePayloadPagination(FanvueModel):
+    hasMore: bool
+    page: float
+    size: float
+
+
+class GetCreatorCustomListMembersResponsePayload(FanvueModel):
+    data: list[GetCreatorCustomListMembersResponsePayloadDataItem]
+    pagination: GetCreatorCustomListMembersResponsePayloadPagination
+
+
+class GetCreatorSmartListsResponsePayloadItem(FanvueModel):
+    count: float
+    name: str
+    uuid: Literal['subscribers', 'auto_renewing', 'non_renewing', 'followers', 'free_trial_subscribers', 'expired_subscribers', 'spent_more_than_50', 'muted']
+
+
+class GetCreatorSmartListMembersResponsePayloadDataItem(FanvueModel):
+    displayName: str
+    handle: str
+    isCreator: bool
+    uuid: str
+
+
+class GetCreatorSmartListMembersResponsePayloadPagination(FanvueModel):
+    hasMore: bool
+    page: float
+    size: float
+
+
+class GetCreatorSmartListMembersResponsePayload(FanvueModel):
+    data: list[GetCreatorSmartListMembersResponsePayloadDataItem]
+    pagination: GetCreatorSmartListMembersResponsePayloadPagination
+
+
+class ListCreatorMassMessagesResponsePayloadDataItem(FanvueModel):
+    createdAt: str | None
+    mediaUuids: list[str]
+    price: float | None
+    publishedAt: str | None
+    purchaseCount: float
+    recipientCount: float
+    scheduledAt: str | None
+    status: Literal['SENT', 'UNSENT', 'SENDING', 'FAILED', 'MODERATED', 'SCHEDULED']
+    text: str | None
+    totalRevenue: float
+    uuid: str
+    viewCount: float
+
+
+class ListCreatorMassMessagesResponsePayloadPagination(FanvueModel):
+    hasMore: bool
+    page: float
+    size: float
+
+
+class ListCreatorMassMessagesResponsePayload(FanvueModel):
+    data: list[ListCreatorMassMessagesResponsePayloadDataItem]
+    pagination: ListCreatorMassMessagesResponsePayloadPagination
+
+
+class SendCreatorMassMessageResponsePayload(FanvueModel):
+    createdAt: str | None
+    id: str
+    recipientCount: float
+
+
+class ListCreatorChatMediaResponsePayloadDataItemVariantsItem(FanvueModel):
+    displayPosition: float
+    height: float | None
+    lengthMs: float | None
+    url: str | None = None
+    variantType: Literal['main', 'thumbnail', 'thumbnail_gallery', 'blurred']
+    width: float | None
+
+
+class ListCreatorChatMediaResponsePayloadDataItem(FanvueModel):
+    created_at: str | None
+    mediaType: Literal['image', 'video', 'audio', 'document', 'unknown']
+    messageUuid: str
+    name: str | None
+    ownerUuid: str
+    sentAt: str | None
+    uuid: str
+    variants: list[ListCreatorChatMediaResponsePayloadDataItemVariantsItem] | None = None
+
+
+class ListCreatorChatMediaResponsePayload(FanvueModel):
+    data: list[ListCreatorChatMediaResponsePayloadDataItem]
     nextCursor: str | None
 
 
-class GetCreatorMediaCreatorsCreatorUserUuidMediaGetResponsesContentApplicationJsonSchemaDataItems0(FanvueModel):
+class SendCreatorMessageResponsePayload(FanvueModel):
+    messageUuid: str
+
+
+class ListCreatorMessagesResponsePayloadDataItemPricingUsd(FanvueModel):
+    price: float
+
+
+class ListCreatorMessagesResponsePayloadDataItemPricing(FanvueModel):
+    USD: ListCreatorMessagesResponsePayloadDataItemPricingUsd
+
+
+class ListCreatorMessagesResponsePayloadDataItemRecipient(FanvueModel):
+    handle: str | None = None
+    uuid: str | None = None
+
+
+class ListCreatorMessagesResponsePayloadDataItemSender(FanvueModel):
+    handle: str
     uuid: str
-    status: Literal['created', 'processing', 'ready', 'error']
 
 
-class GetCreatorMediaCreatorsCreatorUserUuidMediaGetResponsesContentApplicationJsonSchemaDataItemsOneOf1VariantsItems(FanvueModel):
+class ListCreatorMessagesResponsePayloadDataItem(FanvueModel):
+    hasMedia: bool | None
+    isRead: bool
+    mediaType: Literal['image', 'video', 'audio', 'document'] | None
+    mediaUuids: list[str]
+    pricing: ListCreatorMessagesResponsePayloadDataItemPricing | None
+    purchasedAt: str | None
+    recipient: ListCreatorMessagesResponsePayloadDataItemRecipient
+    sender: ListCreatorMessagesResponsePayloadDataItemSender
+    sentAt: str | None
+    sentByUserId: str | None
+    text: str | None
+    type: Literal['AUTOMATED_CANCELED', 'AUTOMATED_NEW_FOLLOWER', 'AUTOMATED_NEW_PURCHASE', 'AUTOMATED_NEW_SUBSCRIBER', 'AUTOMATED_RE_SUBSCRIBED', 'AUTOMATED_RENEWED', 'AUTOMATED_CHAT_MESSAGE_REPLY', 'AUTOMATED_FIRST_MESSAGE_REPLY', 'CHAT_TEXT_GENERATION', 'CHAT_TEXT_REPLY', 'CHAT_TEXT_REWRITE', 'SINGLE_RECIPIENT', 'TIP', 'VOICE_CALL']
     uuid: str
-    variantType: Literal['blurred', 'main', 'thumbnail', 'thumbnail_gallery']
-    displayPosition: float
-    url: str | None = None
-    width: float | None
-    height: float | None
-    lengthMs: float | None
 
 
-class GetCreatorMediaCreatorsCreatorUserUuidMediaGetResponsesContentApplicationJsonSchemaDataItems1(FanvueModel):
-    uuid: str
-    status: Literal['created', 'processing', 'ready', 'error']
-    createdAt: str
-    url: str | None = None
-    caption: str | None
-    description: str | None
-    name: str | None
-    mediaType: Literal['image', 'video', 'audio', 'document']
-    recommendedPrice: float | None
-    variants: list[GetCreatorMediaCreatorsCreatorUserUuidMediaGetResponsesContentApplicationJsonSchemaDataItemsOneOf1VariantsItems] | None = None
-    purchasedByFan: bool | None = None
-
-
-class GetCreatorMediaCreatorsCreatorUserUuidMediaGetResponsesContentApplicationJsonSchemaPagination(FanvueModel):
+class ListCreatorMessagesResponsePayloadPagination(FanvueModel):
+    hasMore: bool
     page: float
     size: float
-    hasMore: bool
 
 
-class GetCreatorMediaGetCreatorMediaResponse200(FanvueModel):
-    data: list[GetCreatorMediaCreatorsCreatorUserUuidMediaGetResponsesContentApplicationJsonSchemaDataItems0 | GetCreatorMediaCreatorsCreatorUserUuidMediaGetResponsesContentApplicationJsonSchemaDataItems1]
-    pagination: GetCreatorMediaCreatorsCreatorUserUuidMediaGetResponsesContentApplicationJsonSchemaPagination
+class ListCreatorMessagesResponsePayload(FanvueModel):
+    data: list[ListCreatorMessagesResponsePayloadDataItem]
+    pagination: ListCreatorMessagesResponsePayloadPagination
 
 
-class GetCreatorMediaByUuidGetCreatorMediaByUuidResponse2000(FanvueModel):
-    uuid: str
-    status: Literal['created', 'processing', 'ready', 'error']
+class GetCreatorMessageMediaByUuidsResponsePayloadErrorsItem(FanvueModel):
+    code: Literal['NOT_IN_MESSAGE', 'INTERNAL']
+    mediaUuid: str
+    message: str
 
 
-class GetCreatorMediaByUuidCreatorsCreatorUserUuidMediaUuidGetResponsesContentApplicationJsonSchemaOneOf1VariantsItems(FanvueModel):
-    uuid: str
-    variantType: Literal['blurred', 'main', 'thumbnail', 'thumbnail_gallery']
+class GetCreatorMessageMediaByUuidsResponsePayloadResultsValueVariantsItem(FanvueModel):
     displayPosition: float
-    url: str | None = None
-    width: float | None
     height: float | None
     lengthMs: float | None
-
-
-class GetCreatorMediaByUuidGetCreatorMediaByUuidResponse2001(FanvueModel):
-    uuid: str
-    status: Literal['created', 'processing', 'ready', 'error']
-    createdAt: str
     url: str | None = None
-    caption: str | None
-    description: str | None
+    variantType: Literal['main', 'thumbnail', 'thumbnail_gallery', 'blurred']
+    width: float | None
+
+
+class GetCreatorMessageMediaByUuidsResponsePayloadResultsValue(FanvueModel):
+    created_at: str | None
+    mediaType: Literal['image', 'video', 'audio', 'document', 'unknown']
+    messageUuid: str
     name: str | None
+    ownerUuid: str
+    sentAt: str | None
+    uuid: str
+    variants: list[GetCreatorMessageMediaByUuidsResponsePayloadResultsValueVariantsItem] | None = None
+
+
+class GetCreatorMessageMediaByUuidsResponsePayload(FanvueModel):
+    errors: list[GetCreatorMessageMediaByUuidsResponsePayloadErrorsItem]
+    results: dict[str, GetCreatorMessageMediaByUuidsResponsePayloadResultsValue | None]
+
+
+class ListCreatorFollowersResponsePayloadDataItem(FanvueModel):
+    avatarUrl: str | None
+    displayName: str
+    handle: str
+    isTopSpender: bool
+    nickname: str | None
+    registeredAt: str
+    uuid: str
+
+
+class ListCreatorFollowersResponsePayloadPagination(FanvueModel):
+    hasMore: bool
+    page: float
+    size: float
+
+
+class ListCreatorFollowersResponsePayload(FanvueModel):
+    data: list[ListCreatorFollowersResponsePayloadDataItem]
+    pagination: ListCreatorFollowersResponsePayloadPagination
+
+
+class GetCreatorEarningsResponsePayloadDataItemUser(FanvueModel):
+    displayName: str
+    handle: str
+    isTopSpender: bool
+    nickname: str | None
+    uuid: str
+
+
+class GetCreatorEarningsResponsePayloadDataItem(FanvueModel):
+    currency: str | None
+    date: str
+    gross: float
+    messageUuid: str | None = None
+    net: float
+    postUuid: str | None = None
+    source: Literal['all', 'affiliate', 'appStore', 'checkoutLink', 'mediaLink', 'message', 'post', 'referral', 'renewal', 'subscription', 'tip', 'giveaway']
+    transactionOrderId: str
+    transactionOrderStatus: Literal['availableForPayout', 'pendingBalance']
+    user: GetCreatorEarningsResponsePayloadDataItemUser | None
+
+
+class GetCreatorEarningsResponsePayload(FanvueModel):
+    data: list[GetCreatorEarningsResponsePayloadDataItem]
+    nextCursor: str | None
+
+
+class GetCreatorEarningsSummaryResponsePayloadAverageByDayOfWeek(FanvueModel):
+    p_1: float = Field(alias='1')
+    p_2: float = Field(alias='2')
+    p_3: float = Field(alias='3')
+    p_4: float = Field(alias='4')
+    p_5: float = Field(alias='5')
+    p_6: float = Field(alias='6')
+    p_7: float = Field(alias='7')
+
+
+class GetCreatorEarningsSummaryResponsePayloadBreakdownBySourceMessages(FanvueModel):
+    gross: float
+    net: float
+
+
+class GetCreatorEarningsSummaryResponsePayloadBreakdownBySourceOther(FanvueModel):
+    gross: float
+    net: float
+
+
+class GetCreatorEarningsSummaryResponsePayloadBreakdownBySourcePosts(FanvueModel):
+    gross: float
+    net: float
+
+
+class GetCreatorEarningsSummaryResponsePayloadBreakdownBySourceReferrals(FanvueModel):
+    gross: float
+    net: float
+
+
+class GetCreatorEarningsSummaryResponsePayloadBreakdownBySourceRenewals(FanvueModel):
+    gross: float
+    net: float
+
+
+class GetCreatorEarningsSummaryResponsePayloadBreakdownBySourceSubs(FanvueModel):
+    gross: float
+    net: float
+
+
+class GetCreatorEarningsSummaryResponsePayloadBreakdownBySourceTips(FanvueModel):
+    gross: float
+    net: float
+
+
+class GetCreatorEarningsSummaryResponsePayloadBreakdownBySource(FanvueModel):
+    messages: GetCreatorEarningsSummaryResponsePayloadBreakdownBySourceMessages
+    other: GetCreatorEarningsSummaryResponsePayloadBreakdownBySourceOther
+    posts: GetCreatorEarningsSummaryResponsePayloadBreakdownBySourcePosts
+    referrals: GetCreatorEarningsSummaryResponsePayloadBreakdownBySourceReferrals
+    renewals: GetCreatorEarningsSummaryResponsePayloadBreakdownBySourceRenewals
+    subs: GetCreatorEarningsSummaryResponsePayloadBreakdownBySourceSubs
+    tips: GetCreatorEarningsSummaryResponsePayloadBreakdownBySourceTips
+
+
+class GetCreatorEarningsSummaryResponsePayloadEarningsByTypeMessages(FanvueModel):
+    gross: float
+    net: float
+
+
+class GetCreatorEarningsSummaryResponsePayloadEarningsByTypeRenewals(FanvueModel):
+    gross: float
+    net: float
+
+
+class GetCreatorEarningsSummaryResponsePayloadEarningsByTypeSubs(FanvueModel):
+    gross: float
+    net: float
+
+
+class GetCreatorEarningsSummaryResponsePayloadEarningsByTypeTips(FanvueModel):
+    gross: float
+    net: float
+
+
+class GetCreatorEarningsSummaryResponsePayloadEarningsByType(FanvueModel):
+    messages: GetCreatorEarningsSummaryResponsePayloadEarningsByTypeMessages
+    renewals: GetCreatorEarningsSummaryResponsePayloadEarningsByTypeRenewals
+    subs: GetCreatorEarningsSummaryResponsePayloadEarningsByTypeSubs
+    tips: GetCreatorEarningsSummaryResponsePayloadEarningsByTypeTips
+
+
+class GetCreatorEarningsSummaryResponsePayloadOverTimeItem(FanvueModel):
+    gross: float
+    net: float
+    periodStart: str
+
+
+class GetCreatorEarningsSummaryResponsePayloadPeriod(FanvueModel):
+    endDate: str | None
+    granularity: Literal['day', 'week']
+    startDate: str | None
+    timezone: str
+
+
+class GetCreatorEarningsSummaryResponsePayloadTotalsAllTime(FanvueModel):
+    gross: float
+    net: float
+
+
+class GetCreatorEarningsSummaryResponsePayloadTotalsThisMonth(FanvueModel):
+    gross: float
+    grossChangePercentage: float | None
+    net: float
+    netChangePercentage: float | None
+    previousMonthGross: float
+    previousMonthNet: float
+
+
+class GetCreatorEarningsSummaryResponsePayloadTotals(FanvueModel):
+    allTime: GetCreatorEarningsSummaryResponsePayloadTotalsAllTime
+    thisMonth: GetCreatorEarningsSummaryResponsePayloadTotalsThisMonth
+
+
+class GetCreatorEarningsSummaryResponsePayload(FanvueModel):
+    averageByDayOfWeek: GetCreatorEarningsSummaryResponsePayloadAverageByDayOfWeek
+    averageByHourOfDay: dict[str, float]
+    breakdownBySource: GetCreatorEarningsSummaryResponsePayloadBreakdownBySource
+    earningsByType: GetCreatorEarningsSummaryResponsePayloadEarningsByType
+    overTime: list[GetCreatorEarningsSummaryResponsePayloadOverTimeItem]
+    period: GetCreatorEarningsSummaryResponsePayloadPeriod
+    totals: GetCreatorEarningsSummaryResponsePayloadTotals
+
+
+class GetCreatorSubscribersResponsePayloadDataItem(FanvueModel):
+    cancelledSubscribersCount: float
+    date: str
+    newSubscribersCount: float
+    total: float
+
+
+class GetCreatorSubscribersResponsePayload(FanvueModel):
+    data: list[GetCreatorSubscribersResponsePayloadDataItem]
+    nextCursor: str | None
+
+
+class GetCreatorTopSpendersResponsePayloadDataItemUser(FanvueModel):
+    avatarUrl: str | None
+    displayName: str
+    handle: str
+    isTopSpender: bool
+    nickname: str | None
+    registeredAt: str
+    uuid: str
+
+
+class GetCreatorTopSpendersResponsePayloadDataItem(FanvueModel):
+    gross: float
+    messages: float
+    net: float
+    user: GetCreatorTopSpendersResponsePayloadDataItemUser
+
+
+class GetCreatorTopSpendersResponsePayloadPagination(FanvueModel):
+    hasMore: bool
+    page: float
+    size: float
+
+
+class GetCreatorTopSpendersResponsePayload(FanvueModel):
+    data: list[GetCreatorTopSpendersResponsePayloadDataItem]
+    pagination: GetCreatorTopSpendersResponsePayloadPagination
+
+
+class GetCreatorMediaResponsePayloadDataItemOption1(FanvueModel):
+    status: Literal['created', 'processing', 'ready', 'error']
+    uuid: str
+
+
+class GetCreatorMediaResponsePayloadDataItemOption2Tags(FanvueModel):
+    bodyParts: list[str]
+    bodyType: list[str]
+    description: str | None
+    hairColor: list[str]
+    importantTags: list[str]
+    isNsfw: bool
+    mediaType: Literal['image', 'video']
+    nsfwCategory: list[str]
+    otherTags: list[str]
+    people: list[str]
+    position: list[str]
+    setting: list[str]
+    sexActs: list[str]
+    sexObjects: list[str]
+    skinColor: list[str]
+    tags: list[str]
+
+
+class GetCreatorMediaResponsePayloadDataItemOption2VariantsItem(FanvueModel):
+    displayPosition: float
+    height: float | None
+    lengthMs: float | None
+    url: str | None = None
+    uuid: str
+    variantType: Literal['blurred', 'main', 'thumbnail', 'thumbnail_gallery']
+    width: float | None
+
+
+class GetCreatorMediaResponsePayloadDataItemOption2(FanvueModel):
+    caption: str | None
+    createdAt: str | None
+    description: str | None
     mediaType: Literal['image', 'video', 'audio', 'document']
-    recommendedPrice: float | None
-    variants: list[GetCreatorMediaByUuidCreatorsCreatorUserUuidMediaUuidGetResponsesContentApplicationJsonSchemaOneOf1VariantsItems] | None = None
+    name: str | None
     purchasedByFan: bool | None = None
+    recommendedPrice: float | None
+    status: Literal['created', 'processing', 'ready', 'error']
+    tags: GetCreatorMediaResponsePayloadDataItemOption2Tags | None = None
+    url: str | None = None
+    uuid: str
+    variants: list[GetCreatorMediaResponsePayloadDataItemOption2VariantsItem] | None = None
 
 
-class CreateCreatorUploadSessionCreateCreatorUploadSessionResponse200(FanvueModel):
+class GetCreatorMediaResponsePayloadPagination(FanvueModel):
+    hasMore: bool
+    page: float
+    size: float
+
+
+class GetCreatorMediaResponsePayload(FanvueModel):
+    data: list[GetCreatorMediaResponsePayloadDataItemOption1 | GetCreatorMediaResponsePayloadDataItemOption2]
+    pagination: GetCreatorMediaResponsePayloadPagination
+
+
+class CreateCreatorUploadSessionResponsePayload(FanvueModel):
     mediaUuid: str
     uploadId: str
 
 
-class GetCreatorUploadPartUrlResponsePayload(FanvueModel):
-    pass
-
-
-class CompleteCreatorUploadSessionCompleteCreatorUploadSessionResponse200(FanvueModel):
+class CompleteCreatorUploadSessionResponsePayload(FanvueModel):
     status: Literal['created', 'processing', 'ready', 'error']
 
 
-class CreateCreatorPostCreateCreatorPostResponse201(FanvueModel):
+class GetCreatorMediaByUuidResponsePayloadOption1(FanvueModel):
+    status: Literal['created', 'processing', 'ready', 'error']
     uuid: str
+
+
+class GetCreatorMediaByUuidResponsePayloadOption2Tags(FanvueModel):
+    bodyParts: list[str]
+    bodyType: list[str]
+    description: str | None
+    hairColor: list[str]
+    importantTags: list[str]
+    isNsfw: bool
+    mediaType: Literal['image', 'video']
+    nsfwCategory: list[str]
+    otherTags: list[str]
+    people: list[str]
+    position: list[str]
+    setting: list[str]
+    sexActs: list[str]
+    sexObjects: list[str]
+    skinColor: list[str]
+    tags: list[str]
+
+
+class GetCreatorMediaByUuidResponsePayloadOption2VariantsItem(FanvueModel):
+    displayPosition: float
+    height: float | None
+    lengthMs: float | None
+    url: str | None = None
+    uuid: str
+    variantType: Literal['blurred', 'main', 'thumbnail', 'thumbnail_gallery']
+    width: float | None
+
+
+class GetCreatorMediaByUuidResponsePayloadOption2(FanvueModel):
+    caption: str | None
+    createdAt: str | None
+    description: str | None
+    mediaType: Literal['image', 'video', 'audio', 'document']
+    name: str | None
+    purchasedByFan: bool | None = None
+    recommendedPrice: float | None
+    status: Literal['created', 'processing', 'ready', 'error']
+    tags: GetCreatorMediaByUuidResponsePayloadOption2Tags | None = None
+    url: str | None = None
+    uuid: str
+    variants: list[GetCreatorMediaByUuidResponsePayloadOption2VariantsItem] | None = None
+
+
+class ListCreatorNotificationsResponsePayloadDataItemOriginator(FanvueModel):
+    avatarUrl: str | None
+    displayName: str
+    handle: str
+    isCreator: bool
+    uuid: str
+
+
+class ListCreatorNotificationsResponsePayloadDataItem(FanvueModel):
     createdAt: str
-    text: str | None
-    price: float | None
-    audience: Literal['subscribers', 'followers-and-subscribers']
-    publishAt: str | None
-    publishedAt: str | None
-    expiresAt: str | None
+    data: dict[str, Any | None]
+    eventType: int
+    isRead: bool
+    originator: ListCreatorNotificationsResponsePayloadDataItemOriginator | None
+    receiverUuid: str
+    uuid: str
 
 
-class ListCreatorTrackingLinksCreatorsCreatorUserUuidTrackingLinksGetResponsesContentApplicationJsonSchemaDataItemsEngagement(FanvueModel):
-    acquiredSubscribers: float
-    acquiredFollowers: float
+class ListCreatorNotificationsResponsePayloadPagination(FanvueModel):
+    hasMore: bool
+    page: float
+    size: float
 
 
-class ListCreatorTrackingLinksCreatorsCreatorUserUuidTrackingLinksGetResponsesContentApplicationJsonSchemaDataItemsEarnings(FanvueModel):
+class ListCreatorNotificationsResponsePayload(FanvueModel):
+    data: list[ListCreatorNotificationsResponsePayloadDataItem]
+    pagination: ListCreatorNotificationsResponsePayloadPagination
+
+
+class GetCreatorPostsResponsePayloadDataItemCollectionsItem(FanvueModel):
+    label: str
+    uuid: str
+
+
+class GetCreatorPostsResponsePayloadDataItemTips(FanvueModel):
+    count: float
     totalGross: float
     totalNet: float
 
 
-class ListCreatorTrackingLinksCreatorsCreatorUserUuidTrackingLinksGetResponsesContentApplicationJsonSchemaDataItems(FanvueModel):
-    uuid: str
-    name: str
-    linkUrl: str
-    externalSocialPlatform: Literal['facebook', 'instagram', 'other', 'reddit', 'snapchat', 'tiktok', 'twitter', 'youtube']
+class GetCreatorPostsResponsePayloadDataItem(FanvueModel):
+    audience: Literal['subscribers', 'followers-and-subscribers']
+    collections: list[GetCreatorPostsResponsePayloadDataItemCollectionsItem]
+    commentsCount: float
     createdAt: str
+    expiresAt: str | None
+    isPinned: bool
+    likesCount: float
+    mediaPreviewUuid: str | None
+    mediaUuids: list[str]
+    price: float | None
+    publishAt: str | None
+    publishedAt: str | None
+    text: str | None
+    tips: GetCreatorPostsResponsePayloadDataItemTips
+    uuid: str
+
+
+class GetCreatorPostsResponsePayloadPagination(FanvueModel):
+    hasMore: bool
+    page: float
+    size: float
+
+
+class GetCreatorPostsResponsePayload(FanvueModel):
+    data: list[GetCreatorPostsResponsePayloadDataItem]
+    pagination: GetCreatorPostsResponsePayloadPagination
+
+
+class CreateCreatorPostResponsePayload(FanvueModel):
+    audience: Literal['subscribers', 'followers-and-subscribers']
+    createdAt: str
+    expiresAt: str | None
+    mediaPreviewUuid: str | None
+    price: float | None
+    publishAt: str | None
+    publishedAt: str | None
+    text: str | None
+    uuid: str
+
+
+class UpdateCreatorPostResponsePayloadCollectionsItem(FanvueModel):
+    label: str
+    uuid: str
+
+
+class UpdateCreatorPostResponsePayloadTips(FanvueModel):
+    count: float
+    totalGross: float
+    totalNet: float
+
+
+class UpdateCreatorPostResponsePayload(FanvueModel):
+    audience: Literal['subscribers', 'followers-and-subscribers']
+    collections: list[UpdateCreatorPostResponsePayloadCollectionsItem]
+    commentsCount: float
+    createdAt: str
+    expiresAt: str | None
+    isPinned: bool
+    likesCount: float
+    mediaPreviewUuid: str | None
+    mediaUuids: list[str]
+    price: float | None
+    publishAt: str | None
+    publishedAt: str | None
+    text: str | None
+    tips: UpdateCreatorPostResponsePayloadTips
+    uuid: str
+
+
+class GetCreatorPostCommentsResponsePayloadDataItemUser(FanvueModel):
+    displayName: str
+    handle: str
+    isTopSpender: bool
+    nickname: str | None
+    uuid: str
+
+
+class GetCreatorPostCommentsResponsePayloadDataItem(FanvueModel):
+    createdAt: str
+    text: str
+    updatedAt: str | None
+    user: GetCreatorPostCommentsResponsePayloadDataItemUser | None
+    uuid: str
+
+
+class GetCreatorPostCommentsResponsePayloadPagination(FanvueModel):
+    hasMore: bool
+    page: float
+    size: float
+
+
+class GetCreatorPostCommentsResponsePayload(FanvueModel):
+    data: list[GetCreatorPostCommentsResponsePayloadDataItem]
+    pagination: GetCreatorPostCommentsResponsePayloadPagination
+
+
+class CreateCreatorPostCommentResponsePayload(FanvueModel):
+    createdAt: str
+    text: str
+    updatedAt: str | None
+    uuid: str
+
+
+class UnpinCreatorPostResponsePayloadCollectionsItem(FanvueModel):
+    label: str
+    uuid: str
+
+
+class UnpinCreatorPostResponsePayloadTips(FanvueModel):
+    count: float
+    totalGross: float
+    totalNet: float
+
+
+class UnpinCreatorPostResponsePayload(FanvueModel):
+    audience: Literal['subscribers', 'followers-and-subscribers']
+    collections: list[UnpinCreatorPostResponsePayloadCollectionsItem]
+    commentsCount: float
+    createdAt: str
+    expiresAt: str | None
+    isPinned: bool
+    likesCount: float
+    mediaPreviewUuid: str | None
+    mediaUuids: list[str]
+    price: float | None
+    publishAt: str | None
+    publishedAt: str | None
+    text: str | None
+    tips: UnpinCreatorPostResponsePayloadTips
+    uuid: str
+
+
+class PinCreatorPostResponsePayloadCollectionsItem(FanvueModel):
+    label: str
+    uuid: str
+
+
+class PinCreatorPostResponsePayloadTips(FanvueModel):
+    count: float
+    totalGross: float
+    totalNet: float
+
+
+class PinCreatorPostResponsePayload(FanvueModel):
+    audience: Literal['subscribers', 'followers-and-subscribers']
+    collections: list[PinCreatorPostResponsePayloadCollectionsItem]
+    commentsCount: float
+    createdAt: str
+    expiresAt: str | None
+    isPinned: bool
+    likesCount: float
+    mediaPreviewUuid: str | None
+    mediaUuids: list[str]
+    price: float | None
+    publishAt: str | None
+    publishedAt: str | None
+    text: str | None
+    tips: PinCreatorPostResponsePayloadTips
+    uuid: str
+
+
+class RepostCreatorPostResponsePayloadCollectionsItem(FanvueModel):
+    label: str
+    uuid: str
+
+
+class RepostCreatorPostResponsePayloadTips(FanvueModel):
+    count: float
+    totalGross: float
+    totalNet: float
+
+
+class RepostCreatorPostResponsePayload(FanvueModel):
+    audience: Literal['subscribers', 'followers-and-subscribers']
+    collections: list[RepostCreatorPostResponsePayloadCollectionsItem]
+    commentsCount: float
+    createdAt: str
+    expiresAt: str | None
+    isPinned: bool
+    likesCount: float
+    mediaPreviewUuid: str | None
+    mediaUuids: list[str]
+    price: float | None
+    publishAt: str | None
+    publishedAt: str | None
+    text: str | None
+    tips: RepostCreatorPostResponsePayloadTips
+    uuid: str
+
+
+class ListCreatorSubscribersResponsePayloadDataItem(FanvueModel):
+    avatarUrl: str | None
+    displayName: str
+    handle: str
+    isTopSpender: bool
+    nickname: str | None
+    registeredAt: str
+    uuid: str
+
+
+class ListCreatorSubscribersResponsePayloadPagination(FanvueModel):
+    hasMore: bool
+    page: float
+    size: float
+
+
+class ListCreatorSubscribersResponsePayload(FanvueModel):
+    data: list[ListCreatorSubscribersResponsePayloadDataItem]
+    pagination: ListCreatorSubscribersResponsePayloadPagination
+
+
+class GetOnlineSubscribersResponsePayloadDataItem(FanvueModel):
+    lastSeenAt: str | None
+    uuid: str
+
+
+class GetOnlineSubscribersResponsePayload(FanvueModel):
+    count: float
+    data: list[GetOnlineSubscribersResponsePayloadDataItem]
+
+
+class ListCreatorTrackingLinksResponsePayloadDataItemEarnings(FanvueModel):
+    totalGross: float
+    totalNet: float
+
+
+class ListCreatorTrackingLinksResponsePayloadDataItemEngagement(FanvueModel):
+    acquiredFollowers: float
+    acquiredSubscribers: float
+    totalFollowers: float
+    totalSubscribers: float
+
+
+class ListCreatorTrackingLinksResponsePayloadDataItem(FanvueModel):
     clicks: float
-    engagement: ListCreatorTrackingLinksCreatorsCreatorUserUuidTrackingLinksGetResponsesContentApplicationJsonSchemaDataItemsEngagement
-    earnings: ListCreatorTrackingLinksCreatorsCreatorUserUuidTrackingLinksGetResponsesContentApplicationJsonSchemaDataItemsEarnings | None
+    createdAt: str
+    earnings: ListCreatorTrackingLinksResponsePayloadDataItemEarnings | None
+    engagement: ListCreatorTrackingLinksResponsePayloadDataItemEngagement
+    externalSocialPlatform: Literal['facebook', 'instagram', 'other', 'reddit', 'snapchat', 'tiktok', 'twitter', 'youtube']
+    linkUrl: str
+    name: str
+    uuid: str
 
 
-class ListCreatorTrackingLinksListCreatorTrackingLinksResponse200(FanvueModel):
-    data: list[ListCreatorTrackingLinksCreatorsCreatorUserUuidTrackingLinksGetResponsesContentApplicationJsonSchemaDataItems]
+class ListCreatorTrackingLinksResponsePayload(FanvueModel):
+    data: list[ListCreatorTrackingLinksResponsePayloadDataItem]
     nextCursor: str | None
 
 
-class CreateCreatorTrackingLinkCreatorsCreatorUserUuidTrackingLinksPostResponsesContentApplicationJsonSchemaEngagement(FanvueModel):
-    acquiredSubscribers: float
-    acquiredFollowers: float
-
-
-class CreateCreatorTrackingLinkCreatorsCreatorUserUuidTrackingLinksPostResponsesContentApplicationJsonSchemaEarnings(FanvueModel):
+class CreateCreatorTrackingLinkResponsePayloadEarnings(FanvueModel):
     totalGross: float
     totalNet: float
 
 
-class CreateCreatorTrackingLinkCreateCreatorTrackingLinkResponse201(FanvueModel):
-    uuid: str
-    name: str
-    linkUrl: str
-    externalSocialPlatform: Literal['facebook', 'instagram', 'other', 'reddit', 'snapchat', 'tiktok', 'twitter', 'youtube']
-    createdAt: str
+class CreateCreatorTrackingLinkResponsePayloadEngagement(FanvueModel):
+    acquiredFollowers: float
+    acquiredSubscribers: float
+    totalFollowers: float
+    totalSubscribers: float
+
+
+class CreateCreatorTrackingLinkResponsePayload(FanvueModel):
     clicks: float
-    engagement: CreateCreatorTrackingLinkCreatorsCreatorUserUuidTrackingLinksPostResponsesContentApplicationJsonSchemaEngagement
-    earnings: CreateCreatorTrackingLinkCreatorsCreatorUserUuidTrackingLinksPostResponsesContentApplicationJsonSchemaEarnings | None
+    createdAt: str
+    earnings: CreateCreatorTrackingLinkResponsePayloadEarnings | None
+    engagement: CreateCreatorTrackingLinkResponsePayloadEngagement
+    externalSocialPlatform: Literal['facebook', 'instagram', 'other', 'reddit', 'snapchat', 'tiktok', 'twitter', 'youtube']
+    linkUrl: str
+    name: str
+    uuid: str
 
 
-GetCurrentUserResponse: TypeAlias = GetCurrentUserGetCurrentUserResponse200
-ListChatsResponse: TypeAlias = ListChatsListChatsResponse200
-GetUnreadChatsCountResponse: TypeAlias = GetUnreadChatsCountGetUnreadChatsCountResponse200
-ListMediaResponse: TypeAlias = ListMediaListMediaResponse200
-CreateChatResponse: TypeAlias = CreateChatCreateChatResponse201
-GetBatchStatusesResponse: TypeAlias = dict[str, GetBatchStatusesChatsStatusesPostResponsesContentApplicationJsonSchema]
-ListMessagesResponse: TypeAlias = ListMessagesListMessagesResponse200
-SendMessageResponse: TypeAlias = SendMessageSendMessageResponse201
-SendMassMessageResponse: TypeAlias = SendMassMessageSendMassMessageResponse201
-ListTemplateMessagesResponse: TypeAlias = ListTemplateMessagesListTemplateMessagesResponse200
-GetTemplateMessageResponse: TypeAlias = GetTemplateMessageGetTemplateMessageResponse200
-GetSmartListsResponse: TypeAlias = list[GetSmartListsChatsListsSmartGetResponsesContentApplicationJsonSchemaItems]
-GetSmartListMembersResponse: TypeAlias = GetSmartListMembersGetSmartListMembersResponse200
-GetCustomListsResponse: TypeAlias = GetCustomListsGetCustomListsResponse200
-GetCustomListMembersResponse: TypeAlias = GetCustomListMembersGetCustomListMembersResponse200
-CreateCustomListResponse: TypeAlias = CreateCustomListCreateCustomListResponse201
-AddMembersToCustomListResponse: TypeAlias = AddMembersToCustomListAddMembersToCustomListResponse201
-GetPostsResponse: TypeAlias = GetPostsGetPostsResponse200
-GetPostByUuidResponse: TypeAlias = GetPostByUuidGetPostByUuidResponse200
-GetPostTipsResponse: TypeAlias = GetPostTipsGetPostTipsResponse200
-GetPostLikesResponse: TypeAlias = GetPostLikesGetPostLikesResponse200
-GetPostCommentsResponse: TypeAlias = GetPostCommentsGetPostCommentsResponse200
-CreatePostResponse: TypeAlias = CreatePostCreatePostResponse201
-ListFollowersResponse: TypeAlias = ListFollowersListFollowersResponse200
-ListSubscribersResponse: TypeAlias = ListSubscribersListSubscribersResponse200
-GetEarningsResponse: TypeAlias = GetEarningsGetEarningsResponse200
-GetTopSpendersResponse: TypeAlias = GetTopSpendersGetTopSpendersResponse200
-GetSubscribersResponse: TypeAlias = GetSubscribersGetSubscribersResponse200
-GetFanInsightsResponse: TypeAlias = GetFanInsightsGetFanInsightsResponse200
-GetUserMediaResponse: TypeAlias = GetUserMediaGetUserMediaResponse200
-GetUserMediaByUuidResponse: TypeAlias = GetUserMediaByUuidGetUserMediaByUuidResponse2000 | GetUserMediaByUuidGetUserMediaByUuidResponse2001
-CreateUploadSessionResponse: TypeAlias = CreateUploadSessionCreateUploadSessionResponse200
-GetUploadPartUrlResponse: TypeAlias = GetUploadPartUrlResponsePayload
-CompleteUploadSessionResponse: TypeAlias = CompleteUploadSessionCompleteUploadSessionResponse200
-ListTrackingLinksResponse: TypeAlias = ListTrackingLinksListTrackingLinksResponse200
-CreateTrackingLinkResponse: TypeAlias = CreateTrackingLinkCreateTrackingLinkResponse201
-ListVaultFoldersResponse: TypeAlias = ListVaultFoldersListVaultFoldersResponse200
-CreateVaultFolderResponse: TypeAlias = CreateVaultFolderCreateVaultFolderResponse201
-GetVaultFolderResponse: TypeAlias = GetVaultFolderGetVaultFolderResponse200
-ListVaultFolderMediaResponse: TypeAlias = ListVaultFolderMediaListVaultFolderMediaResponse200
-AttachMediaToVaultFolderResponse: TypeAlias = AttachMediaToVaultFolderAttachMediaToVaultFolderResponse201
-ListCreatorsResponse: TypeAlias = ListCreatorsListCreatorsResponse200
-ListTeamMembersResponse: TypeAlias = list[ListTeamMembersAgenciesTeamMembersGetResponsesContentApplicationJsonSchemaItems]
-UpdateTeamMemberResponse: TypeAlias = UpdateTeamMemberUpdateTeamMemberResponse200
-ListCreatorFollowersResponse: TypeAlias = ListCreatorFollowersListCreatorFollowersResponse200
-ListCreatorSubscribersResponse: TypeAlias = ListCreatorSubscribersListCreatorSubscribersResponse200
-ListCreatorChatsResponse: TypeAlias = ListCreatorChatsListCreatorChatsResponse200
-CreateCreatorChatResponse: TypeAlias = CreateCreatorChatCreateCreatorChatResponse201
-GetCreatorSmartListsResponse: TypeAlias = list[GetCreatorSmartListsCreatorsCreatorUserUuidChatsListsSmartGetResponsesContentApplicationJsonSchemaItems]
-GetCreatorSmartListMembersResponse: TypeAlias = GetCreatorSmartListMembersGetCreatorSmartListMembersResponse200
-GetCreatorCustomListsResponse: TypeAlias = GetCreatorCustomListsGetCreatorCustomListsResponse200
-GetCreatorCustomListMembersResponse: TypeAlias = GetCreatorCustomListMembersGetCreatorCustomListMembersResponse200
-SendCreatorMassMessageResponse: TypeAlias = SendCreatorMassMessageSendCreatorMassMessageResponse201
-SendCreatorMessageResponse: TypeAlias = SendCreatorMessageSendCreatorMessageResponse201
-ListCreatorMessagesResponse: TypeAlias = ListCreatorMessagesListCreatorMessagesResponse200
-ListCreatorChatMediaResponse: TypeAlias = ListCreatorChatMediaListCreatorChatMediaResponse200
-GetCreatorEarningsResponse: TypeAlias = GetCreatorEarningsGetCreatorEarningsResponse200
-GetCreatorTopSpendersResponse: TypeAlias = GetCreatorTopSpendersGetCreatorTopSpendersResponse200
-GetCreatorSubscribersResponse: TypeAlias = GetCreatorSubscribersGetCreatorSubscribersResponse200
-GetCreatorMediaResponse: TypeAlias = GetCreatorMediaGetCreatorMediaResponse200
-GetCreatorMediaByUuidResponse: TypeAlias = GetCreatorMediaByUuidGetCreatorMediaByUuidResponse2000 | GetCreatorMediaByUuidGetCreatorMediaByUuidResponse2001
-CreateCreatorUploadSessionResponse: TypeAlias = CreateCreatorUploadSessionCreateCreatorUploadSessionResponse200
-GetCreatorUploadPartUrlResponse: TypeAlias = GetCreatorUploadPartUrlResponsePayload
-CompleteCreatorUploadSessionResponse: TypeAlias = CompleteCreatorUploadSessionCompleteCreatorUploadSessionResponse200
-CreateCreatorPostResponse: TypeAlias = CreateCreatorPostCreateCreatorPostResponse201
-ListCreatorTrackingLinksResponse: TypeAlias = ListCreatorTrackingLinksListCreatorTrackingLinksResponse200
-CreateCreatorTrackingLinkResponse: TypeAlias = CreateCreatorTrackingLinkCreateCreatorTrackingLinkResponse201
+class ListCreatorTrackingLinkUsersResponsePayloadDataItem(FanvueModel):
+    avatarUrl: str | None
+    displayName: str
+    handle: str
+    isTopSpender: bool
+    nickname: str | None
+    registeredAt: str
+    status: Literal['subscriber', 'follower', 'expired', 'deleted'] | None
+    uuid: str
+
+
+class ListCreatorTrackingLinkUsersResponsePayload(FanvueModel):
+    data: list[ListCreatorTrackingLinkUsersResponsePayloadDataItem]
+    nextCursor: str | None
+
+
+class GetCreatorUserTrackingMetadataResponsePayload(FanvueModel):
+    metadata: dict[str, str] | None
+
+
+class ListCreatorVaultFoldersResponsePayloadDataItem(FanvueModel):
+    createdAt: str | None
+    mediaCount: float
+    name: str
+
+
+class ListCreatorVaultFoldersResponsePayloadPagination(FanvueModel):
+    hasMore: bool
+    page: float
+    size: float
+
+
+class ListCreatorVaultFoldersResponsePayload(FanvueModel):
+    data: list[ListCreatorVaultFoldersResponsePayloadDataItem]
+    pagination: ListCreatorVaultFoldersResponsePayloadPagination
+
+
+class CreateCreatorVaultFolderResponsePayload(FanvueModel):
+    createdAt: str | None
+    mediaCount: float
+    name: str
+
+
+class GetCreatorVaultFolderResponsePayload(FanvueModel):
+    createdAt: str | None
+    mediaCount: float
+    name: str
+
+
+class ListCreatorVaultFolderMediaResponsePayloadDataItem(FanvueModel):
+    createdAt: str | None
+    mediaType: str
+    name: str | None
+    uuid: str
+
+
+class ListCreatorVaultFolderMediaResponsePayloadPagination(FanvueModel):
+    hasMore: bool
+    page: float
+    size: float
+
+
+class ListCreatorVaultFolderMediaResponsePayload(FanvueModel):
+    data: list[ListCreatorVaultFolderMediaResponsePayloadDataItem]
+    pagination: ListCreatorVaultFolderMediaResponsePayloadPagination
+
+
+class AttachCreatorVaultMediaResponsePayload(FanvueModel):
+    addedCount: float
+
+
+class ListFollowersResponsePayloadDataItem(FanvueModel):
+    avatarUrl: str | None
+    displayName: str
+    handle: str
+    isTopSpender: bool
+    nickname: str | None
+    registeredAt: str
+    uuid: str
+
+
+class ListFollowersResponsePayloadPagination(FanvueModel):
+    hasMore: bool
+    page: float
+    size: float
+
+
+class ListFollowersResponsePayload(FanvueModel):
+    data: list[ListFollowersResponsePayloadDataItem]
+    pagination: ListFollowersResponsePayloadPagination
+
+
+class GetEarningsResponsePayloadDataItemUser(FanvueModel):
+    displayName: str
+    handle: str
+    isTopSpender: bool
+    nickname: str | None
+    uuid: str
+
+
+class GetEarningsResponsePayloadDataItem(FanvueModel):
+    currency: str | None
+    date: str
+    gross: float
+    messageUuid: str | None = None
+    net: float
+    postUuid: str | None = None
+    source: Literal['all', 'affiliate', 'appStore', 'checkoutLink', 'mediaLink', 'message', 'post', 'referral', 'renewal', 'subscription', 'tip', 'giveaway']
+    transactionOrderId: str
+    transactionOrderStatus: Literal['availableForPayout', 'pendingBalance']
+    user: GetEarningsResponsePayloadDataItemUser | None
+
+
+class GetEarningsResponsePayload(FanvueModel):
+    data: list[GetEarningsResponsePayloadDataItem]
+    nextCursor: str | None
+
+
+class GetEarningsPercentileResponsePayload(FanvueModel):
+    percentile: float
+
+
+class GetEarningsSummaryResponsePayloadAverageByDayOfWeek(FanvueModel):
+    p_1: float = Field(alias='1')
+    p_2: float = Field(alias='2')
+    p_3: float = Field(alias='3')
+    p_4: float = Field(alias='4')
+    p_5: float = Field(alias='5')
+    p_6: float = Field(alias='6')
+    p_7: float = Field(alias='7')
+
+
+class GetEarningsSummaryResponsePayloadBreakdownBySourceMessages(FanvueModel):
+    gross: float
+    net: float
+
+
+class GetEarningsSummaryResponsePayloadBreakdownBySourceOther(FanvueModel):
+    gross: float
+    net: float
+
+
+class GetEarningsSummaryResponsePayloadBreakdownBySourcePosts(FanvueModel):
+    gross: float
+    net: float
+
+
+class GetEarningsSummaryResponsePayloadBreakdownBySourceReferrals(FanvueModel):
+    gross: float
+    net: float
+
+
+class GetEarningsSummaryResponsePayloadBreakdownBySourceRenewals(FanvueModel):
+    gross: float
+    net: float
+
+
+class GetEarningsSummaryResponsePayloadBreakdownBySourceSubs(FanvueModel):
+    gross: float
+    net: float
+
+
+class GetEarningsSummaryResponsePayloadBreakdownBySourceTips(FanvueModel):
+    gross: float
+    net: float
+
+
+class GetEarningsSummaryResponsePayloadBreakdownBySource(FanvueModel):
+    messages: GetEarningsSummaryResponsePayloadBreakdownBySourceMessages
+    other: GetEarningsSummaryResponsePayloadBreakdownBySourceOther
+    posts: GetEarningsSummaryResponsePayloadBreakdownBySourcePosts
+    referrals: GetEarningsSummaryResponsePayloadBreakdownBySourceReferrals
+    renewals: GetEarningsSummaryResponsePayloadBreakdownBySourceRenewals
+    subs: GetEarningsSummaryResponsePayloadBreakdownBySourceSubs
+    tips: GetEarningsSummaryResponsePayloadBreakdownBySourceTips
+
+
+class GetEarningsSummaryResponsePayloadEarningsByTypeMessages(FanvueModel):
+    gross: float
+    net: float
+
+
+class GetEarningsSummaryResponsePayloadEarningsByTypeRenewals(FanvueModel):
+    gross: float
+    net: float
+
+
+class GetEarningsSummaryResponsePayloadEarningsByTypeSubs(FanvueModel):
+    gross: float
+    net: float
+
+
+class GetEarningsSummaryResponsePayloadEarningsByTypeTips(FanvueModel):
+    gross: float
+    net: float
+
+
+class GetEarningsSummaryResponsePayloadEarningsByType(FanvueModel):
+    messages: GetEarningsSummaryResponsePayloadEarningsByTypeMessages
+    renewals: GetEarningsSummaryResponsePayloadEarningsByTypeRenewals
+    subs: GetEarningsSummaryResponsePayloadEarningsByTypeSubs
+    tips: GetEarningsSummaryResponsePayloadEarningsByTypeTips
+
+
+class GetEarningsSummaryResponsePayloadOverTimeItem(FanvueModel):
+    gross: float
+    net: float
+    periodStart: str
+
+
+class GetEarningsSummaryResponsePayloadPeriod(FanvueModel):
+    endDate: str | None
+    granularity: Literal['day', 'week']
+    startDate: str | None
+    timezone: str
+
+
+class GetEarningsSummaryResponsePayloadTotalsAllTime(FanvueModel):
+    gross: float
+    net: float
+
+
+class GetEarningsSummaryResponsePayloadTotalsThisMonth(FanvueModel):
+    gross: float
+    grossChangePercentage: float | None
+    net: float
+    netChangePercentage: float | None
+    previousMonthGross: float
+    previousMonthNet: float
+
+
+class GetEarningsSummaryResponsePayloadTotals(FanvueModel):
+    allTime: GetEarningsSummaryResponsePayloadTotalsAllTime
+    thisMonth: GetEarningsSummaryResponsePayloadTotalsThisMonth
+
+
+class GetEarningsSummaryResponsePayload(FanvueModel):
+    averageByDayOfWeek: GetEarningsSummaryResponsePayloadAverageByDayOfWeek
+    averageByHourOfDay: dict[str, float]
+    breakdownBySource: GetEarningsSummaryResponsePayloadBreakdownBySource
+    earningsByType: GetEarningsSummaryResponsePayloadEarningsByType
+    overTime: list[GetEarningsSummaryResponsePayloadOverTimeItem]
+    period: GetEarningsSummaryResponsePayloadPeriod
+    totals: GetEarningsSummaryResponsePayloadTotals
+
+
+class GetBulkFanInsightsResponsePayloadErrorsItem(FanvueModel):
+    code: Literal['NOT_FOUND', 'INTERNAL']
+    fanUuid: str
+    message: str
+
+
+class GetBulkFanInsightsResponsePayloadResultsValueSpendingMaxSinglePayment(FanvueModel):
+    gross: float
+    total: float
+
+
+class GetBulkFanInsightsResponsePayloadResultsValueSpendingSourcesValue(FanvueModel):
+    gross: float
+    total: float
+
+
+class GetBulkFanInsightsResponsePayloadResultsValueSpendingTotal(FanvueModel):
+    gross: float
+    total: float
+
+
+class GetBulkFanInsightsResponsePayloadResultsValueSpending(FanvueModel):
+    lastPurchaseAt: str | None
+    maxSinglePayment: GetBulkFanInsightsResponsePayloadResultsValueSpendingMaxSinglePayment
+    sources: dict[str, GetBulkFanInsightsResponsePayloadResultsValueSpendingSourcesValue]
+    total: GetBulkFanInsightsResponsePayloadResultsValueSpendingTotal
+
+
+class GetBulkFanInsightsResponsePayloadResultsValueSubscription(FanvueModel):
+    autoRenewalEnabled: bool
+    createdAt: str | None
+    renewsAt: str | None
+
+
+class GetBulkFanInsightsResponsePayloadResultsValue(FanvueModel):
+    spending: GetBulkFanInsightsResponsePayloadResultsValueSpending
+    status: Literal['subscriber', 'expired', 'follower', 'not_contactable']
+    subscription: GetBulkFanInsightsResponsePayloadResultsValueSubscription
+
+
+class GetBulkFanInsightsResponsePayload(FanvueModel):
+    errors: list[GetBulkFanInsightsResponsePayloadErrorsItem]
+    results: dict[str, GetBulkFanInsightsResponsePayloadResultsValue | None]
+
+
+class BatchFanInsightsResponsePayloadValueOption1SpendingMaxSinglePayment(FanvueModel):
+    gross: float
+    total: float
+
+
+class BatchFanInsightsResponsePayloadValueOption1SpendingSourcesValue(FanvueModel):
+    gross: float
+    total: float
+
+
+class BatchFanInsightsResponsePayloadValueOption1SpendingTotal(FanvueModel):
+    gross: float
+    total: float
+
+
+class BatchFanInsightsResponsePayloadValueOption1Spending(FanvueModel):
+    lastPurchaseAt: str | None
+    maxSinglePayment: BatchFanInsightsResponsePayloadValueOption1SpendingMaxSinglePayment
+    sources: dict[str, BatchFanInsightsResponsePayloadValueOption1SpendingSourcesValue]
+    total: BatchFanInsightsResponsePayloadValueOption1SpendingTotal
+
+
+class BatchFanInsightsResponsePayloadValueOption1Subscription(FanvueModel):
+    autoRenewalEnabled: bool
+    createdAt: str | None
+    renewsAt: str | None
+
+
+class BatchFanInsightsResponsePayloadValueOption1(FanvueModel):
+    spending: BatchFanInsightsResponsePayloadValueOption1Spending
+    status: Literal['subscriber', 'expired', 'follower', 'not_contactable']
+    subscription: BatchFanInsightsResponsePayloadValueOption1Subscription
+
+
+class BatchFanInsightsResponsePayloadValueOption2(FanvueModel):
+    error: Literal['forbidden', 'not_found', 'internal']
+
+
+class GetFanInsightsResponsePayloadSpendingMaxSinglePayment(FanvueModel):
+    gross: float
+    total: float
+
+
+class GetFanInsightsResponsePayloadSpendingSourcesValue(FanvueModel):
+    gross: float
+    total: float
+
+
+class GetFanInsightsResponsePayloadSpendingTotal(FanvueModel):
+    gross: float
+    total: float
+
+
+class GetFanInsightsResponsePayloadSpending(FanvueModel):
+    lastPurchaseAt: str | None
+    maxSinglePayment: GetFanInsightsResponsePayloadSpendingMaxSinglePayment
+    sources: dict[str, GetFanInsightsResponsePayloadSpendingSourcesValue]
+    total: GetFanInsightsResponsePayloadSpendingTotal
+
+
+class GetFanInsightsResponsePayloadSubscription(FanvueModel):
+    autoRenewalEnabled: bool
+    createdAt: str | None
+    renewsAt: str | None
+
+
+class GetFanInsightsResponsePayload(FanvueModel):
+    spending: GetFanInsightsResponsePayloadSpending
+    status: Literal['subscriber', 'expired', 'follower', 'not_contactable']
+    subscription: GetFanInsightsResponsePayloadSubscription
+
+
+class GetSpendingResponsePayloadDataItemUser(FanvueModel):
+    displayName: str
+    handle: str
+    isTopSpender: bool
+    nickname: str | None
+    uuid: str
+
+
+class GetSpendingResponsePayloadDataItem(FanvueModel):
+    currency: str | None
+    date: str
+    gross: float
+    messageUuid: str | None = None
+    net: float
+    postUuid: str | None = None
+    source: Literal['refund', 'chargeback']
+    user: GetSpendingResponsePayloadDataItemUser | None
+
+
+class GetSpendingResponsePayload(FanvueModel):
+    data: list[GetSpendingResponsePayloadDataItem]
+    nextCursor: str | None
+
+
+class GetSubscribersResponsePayloadDataItem(FanvueModel):
+    cancelledSubscribersCount: float
+    date: str
+    newSubscribersCount: float
+    total: float
+
+
+class GetSubscribersResponsePayload(FanvueModel):
+    data: list[GetSubscribersResponsePayloadDataItem]
+    nextCursor: str | None
+
+
+class GetTopSpendersResponsePayloadDataItemUser(FanvueModel):
+    avatarUrl: str | None
+    displayName: str
+    handle: str
+    isTopSpender: bool
+    nickname: str | None
+    registeredAt: str
+    uuid: str
+
+
+class GetTopSpendersResponsePayloadDataItem(FanvueModel):
+    gross: float
+    messages: float
+    net: float
+    user: GetTopSpendersResponsePayloadDataItemUser
+
+
+class GetTopSpendersResponsePayloadPagination(FanvueModel):
+    hasMore: bool
+    page: float
+    size: float
+
+
+class GetTopSpendersResponsePayload(FanvueModel):
+    data: list[GetTopSpendersResponsePayloadDataItem]
+    pagination: GetTopSpendersResponsePayloadPagination
+
+
+class GetUserMediaResponsePayloadDataItemOption1(FanvueModel):
+    status: Literal['created', 'processing', 'ready', 'error']
+    uuid: str
+
+
+class GetUserMediaResponsePayloadDataItemOption2Tags(FanvueModel):
+    bodyParts: list[str]
+    bodyType: list[str]
+    description: str | None
+    hairColor: list[str]
+    importantTags: list[str]
+    isNsfw: bool
+    mediaType: Literal['image', 'video']
+    nsfwCategory: list[str]
+    otherTags: list[str]
+    people: list[str]
+    position: list[str]
+    setting: list[str]
+    sexActs: list[str]
+    sexObjects: list[str]
+    skinColor: list[str]
+    tags: list[str]
+
+
+class GetUserMediaResponsePayloadDataItemOption2VariantsItem(FanvueModel):
+    displayPosition: float
+    height: float | None
+    lengthMs: float | None
+    url: str | None = None
+    uuid: str
+    variantType: Literal['blurred', 'main', 'thumbnail', 'thumbnail_gallery']
+    width: float | None
+
+
+class GetUserMediaResponsePayloadDataItemOption2(FanvueModel):
+    caption: str | None
+    createdAt: str | None
+    description: str | None
+    mediaType: Literal['image', 'video', 'audio', 'document']
+    name: str | None
+    purchasedByFan: bool | None = None
+    recommendedPrice: float | None
+    status: Literal['created', 'processing', 'ready', 'error']
+    tags: GetUserMediaResponsePayloadDataItemOption2Tags | None = None
+    url: str | None = None
+    uuid: str
+    variants: list[GetUserMediaResponsePayloadDataItemOption2VariantsItem] | None = None
+
+
+class GetUserMediaResponsePayloadPagination(FanvueModel):
+    hasMore: bool
+    page: float
+    size: float
+
+
+class GetUserMediaResponsePayload(FanvueModel):
+    data: list[GetUserMediaResponsePayloadDataItemOption1 | GetUserMediaResponsePayloadDataItemOption2]
+    pagination: GetUserMediaResponsePayloadPagination
+
+
+class GetBulkMediaResponsePayloadErrorsItem(FanvueModel):
+    code: Literal['NOT_FOUND', 'INTERNAL']
+    mediaUuid: str
+    message: str
+
+
+class GetBulkMediaResponsePayloadResultsValueOption1(FanvueModel):
+    status: Literal['created', 'processing', 'ready', 'error']
+    uuid: str
+
+
+class GetBulkMediaResponsePayloadResultsValueOption2Tags(FanvueModel):
+    bodyParts: list[str]
+    bodyType: list[str]
+    description: str | None
+    hairColor: list[str]
+    importantTags: list[str]
+    isNsfw: bool
+    mediaType: Literal['image', 'video']
+    nsfwCategory: list[str]
+    otherTags: list[str]
+    people: list[str]
+    position: list[str]
+    setting: list[str]
+    sexActs: list[str]
+    sexObjects: list[str]
+    skinColor: list[str]
+    tags: list[str]
+
+
+class GetBulkMediaResponsePayloadResultsValueOption2VariantsItem(FanvueModel):
+    displayPosition: float
+    height: float | None
+    lengthMs: float | None
+    url: str | None = None
+    uuid: str
+    variantType: Literal['blurred', 'main', 'thumbnail', 'thumbnail_gallery']
+    width: float | None
+
+
+class GetBulkMediaResponsePayloadResultsValueOption2(FanvueModel):
+    caption: str | None
+    createdAt: str | None
+    description: str | None
+    mediaType: Literal['image', 'video', 'audio', 'document']
+    name: str | None
+    purchasedByFan: bool | None = None
+    recommendedPrice: float | None
+    status: Literal['created', 'processing', 'ready', 'error']
+    tags: GetBulkMediaResponsePayloadResultsValueOption2Tags | None = None
+    url: str | None = None
+    uuid: str
+    variants: list[GetBulkMediaResponsePayloadResultsValueOption2VariantsItem] | None = None
+
+
+class GetBulkMediaResponsePayload(FanvueModel):
+    errors: list[GetBulkMediaResponsePayloadErrorsItem]
+    results: dict[str, GetBulkMediaResponsePayloadResultsValueOption1 | GetBulkMediaResponsePayloadResultsValueOption2 | Any | None]
+
+
+class GetMediaLinkPurchaseStatusResponsePayload(FanvueModel):
+    purchased: bool
+
+
+class CreateUploadSessionResponsePayload(FanvueModel):
+    mediaUuid: str
+    uploadId: str
+
+
+class CompleteUploadSessionResponsePayload(FanvueModel):
+    status: Literal['created', 'processing', 'ready', 'error']
+
+
+class GetUserMediaByUuidResponsePayloadOption1(FanvueModel):
+    status: Literal['created', 'processing', 'ready', 'error']
+    uuid: str
+
+
+class GetUserMediaByUuidResponsePayloadOption2Tags(FanvueModel):
+    bodyParts: list[str]
+    bodyType: list[str]
+    description: str | None
+    hairColor: list[str]
+    importantTags: list[str]
+    isNsfw: bool
+    mediaType: Literal['image', 'video']
+    nsfwCategory: list[str]
+    otherTags: list[str]
+    people: list[str]
+    position: list[str]
+    setting: list[str]
+    sexActs: list[str]
+    sexObjects: list[str]
+    skinColor: list[str]
+    tags: list[str]
+
+
+class GetUserMediaByUuidResponsePayloadOption2VariantsItem(FanvueModel):
+    displayPosition: float
+    height: float | None
+    lengthMs: float | None
+    url: str | None = None
+    uuid: str
+    variantType: Literal['blurred', 'main', 'thumbnail', 'thumbnail_gallery']
+    width: float | None
+
+
+class GetUserMediaByUuidResponsePayloadOption2(FanvueModel):
+    caption: str | None
+    createdAt: str | None
+    description: str | None
+    mediaType: Literal['image', 'video', 'audio', 'document']
+    name: str | None
+    purchasedByFan: bool | None = None
+    recommendedPrice: float | None
+    status: Literal['created', 'processing', 'ready', 'error']
+    tags: GetUserMediaByUuidResponsePayloadOption2Tags | None = None
+    url: str | None = None
+    uuid: str
+    variants: list[GetUserMediaByUuidResponsePayloadOption2VariantsItem] | None = None
+
+
+class GetEntitledMediaResponsePayloadOption1(FanvueModel):
+    status: Literal['created', 'processing', 'ready', 'error']
+    uuid: str
+
+
+class GetEntitledMediaResponsePayloadOption2Tags(FanvueModel):
+    bodyParts: list[str]
+    bodyType: list[str]
+    description: str | None
+    hairColor: list[str]
+    importantTags: list[str]
+    isNsfw: bool
+    mediaType: Literal['image', 'video']
+    nsfwCategory: list[str]
+    otherTags: list[str]
+    people: list[str]
+    position: list[str]
+    setting: list[str]
+    sexActs: list[str]
+    sexObjects: list[str]
+    skinColor: list[str]
+    tags: list[str]
+
+
+class GetEntitledMediaResponsePayloadOption2VariantsItem(FanvueModel):
+    displayPosition: float
+    height: float | None
+    lengthMs: float | None
+    url: str | None = None
+    uuid: str
+    variantType: Literal['blurred', 'main', 'thumbnail', 'thumbnail_gallery']
+    width: float | None
+
+
+class GetEntitledMediaResponsePayloadOption2(FanvueModel):
+    caption: str | None
+    createdAt: str | None
+    description: str | None
+    mediaType: Literal['image', 'video', 'audio', 'document']
+    name: str | None
+    purchasedByFan: bool | None = None
+    recommendedPrice: float | None
+    status: Literal['created', 'processing', 'ready', 'error']
+    tags: GetEntitledMediaResponsePayloadOption2Tags | None = None
+    url: str | None = None
+    uuid: str
+    variants: list[GetEntitledMediaResponsePayloadOption2VariantsItem] | None = None
+
+
+class GrantMediaResponsePayload(FanvueModel):
+    entitlementId: str
+    status: Literal['granted']
+
+
+class ListNotificationsResponsePayloadDataItemOriginator(FanvueModel):
+    avatarUrl: str | None
+    displayName: str
+    handle: str
+    isCreator: bool
+    uuid: str
+
+
+class ListNotificationsResponsePayloadDataItem(FanvueModel):
+    createdAt: str
+    data: dict[str, Any | None]
+    eventType: int
+    isRead: bool
+    originator: ListNotificationsResponsePayloadDataItemOriginator | None
+    receiverUuid: str
+    uuid: str
+
+
+class ListNotificationsResponsePayloadPagination(FanvueModel):
+    hasMore: bool
+    page: float
+    size: float
+
+
+class ListNotificationsResponsePayload(FanvueModel):
+    data: list[ListNotificationsResponsePayloadDataItem]
+    pagination: ListNotificationsResponsePayloadPagination
+
+
+class GetPostsResponsePayloadDataItemCollectionsItem(FanvueModel):
+    label: str
+    uuid: str
+
+
+class GetPostsResponsePayloadDataItemTips(FanvueModel):
+    count: float
+    totalGross: float
+    totalNet: float
+
+
+class GetPostsResponsePayloadDataItem(FanvueModel):
+    audience: Literal['subscribers', 'followers-and-subscribers']
+    collections: list[GetPostsResponsePayloadDataItemCollectionsItem]
+    commentsCount: float
+    createdAt: str
+    expiresAt: str | None
+    isPinned: bool
+    likesCount: float
+    mediaPreviewUuid: str | None
+    mediaUuids: list[str]
+    price: float | None
+    publishAt: str | None
+    publishedAt: str | None
+    text: str | None
+    tips: GetPostsResponsePayloadDataItemTips
+    uuid: str
+
+
+class GetPostsResponsePayloadPagination(FanvueModel):
+    hasMore: bool
+    page: float
+    size: float
+
+
+class GetPostsResponsePayload(FanvueModel):
+    data: list[GetPostsResponsePayloadDataItem]
+    pagination: GetPostsResponsePayloadPagination
+
+
+class CreatePostResponsePayload(FanvueModel):
+    audience: Literal['subscribers', 'followers-and-subscribers']
+    createdAt: str
+    expiresAt: str | None
+    mediaPreviewUuid: str | None
+    price: float | None
+    publishAt: str | None
+    publishedAt: str | None
+    text: str | None
+    uuid: str
+
+
+class GetPostByUuidResponsePayloadCollectionsItem(FanvueModel):
+    label: str
+    uuid: str
+
+
+class GetPostByUuidResponsePayloadTips(FanvueModel):
+    count: float
+    totalGross: float
+    totalNet: float
+
+
+class GetPostByUuidResponsePayload(FanvueModel):
+    audience: Literal['subscribers', 'followers-and-subscribers']
+    collections: list[GetPostByUuidResponsePayloadCollectionsItem]
+    commentsCount: float
+    createdAt: str
+    expiresAt: str | None
+    isPinned: bool
+    likesCount: float
+    mediaPreviewUuid: str | None
+    mediaUuids: list[str]
+    price: float | None
+    publishAt: str | None
+    publishedAt: str | None
+    text: str | None
+    tips: GetPostByUuidResponsePayloadTips
+    uuid: str
+
+
+class UpdatePostResponsePayloadCollectionsItem(FanvueModel):
+    label: str
+    uuid: str
+
+
+class UpdatePostResponsePayloadTips(FanvueModel):
+    count: float
+    totalGross: float
+    totalNet: float
+
+
+class UpdatePostResponsePayload(FanvueModel):
+    audience: Literal['subscribers', 'followers-and-subscribers']
+    collections: list[UpdatePostResponsePayloadCollectionsItem]
+    commentsCount: float
+    createdAt: str
+    expiresAt: str | None
+    isPinned: bool
+    likesCount: float
+    mediaPreviewUuid: str | None
+    mediaUuids: list[str]
+    price: float | None
+    publishAt: str | None
+    publishedAt: str | None
+    text: str | None
+    tips: UpdatePostResponsePayloadTips
+    uuid: str
+
+
+class GetPostCommentsResponsePayloadDataItemUser(FanvueModel):
+    displayName: str
+    handle: str
+    isTopSpender: bool
+    nickname: str | None
+    uuid: str
+
+
+class GetPostCommentsResponsePayloadDataItem(FanvueModel):
+    createdAt: str
+    text: str
+    updatedAt: str | None
+    user: GetPostCommentsResponsePayloadDataItemUser | None
+    uuid: str
+
+
+class GetPostCommentsResponsePayloadPagination(FanvueModel):
+    hasMore: bool
+    page: float
+    size: float
+
+
+class GetPostCommentsResponsePayload(FanvueModel):
+    data: list[GetPostCommentsResponsePayloadDataItem]
+    pagination: GetPostCommentsResponsePayloadPagination
+
+
+class CreatePostCommentResponsePayload(FanvueModel):
+    createdAt: str
+    text: str
+    updatedAt: str | None
+    uuid: str
+
+
+class GetPostLikesResponsePayloadDataItemUser(FanvueModel):
+    avatarUrl: str | None
+    displayName: str
+    handle: str
+    isTopSpender: bool
+    nickname: str | None
+    registeredAt: str
+    uuid: str
+
+
+class GetPostLikesResponsePayloadDataItem(FanvueModel):
+    createdAt: str
+    user: GetPostLikesResponsePayloadDataItemUser | None
+
+
+class GetPostLikesResponsePayloadPagination(FanvueModel):
+    hasMore: bool
+    page: float
+    size: float
+
+
+class GetPostLikesResponsePayload(FanvueModel):
+    data: list[GetPostLikesResponsePayloadDataItem]
+    pagination: GetPostLikesResponsePayloadPagination
+
+
+class UnpinPostResponsePayloadCollectionsItem(FanvueModel):
+    label: str
+    uuid: str
+
+
+class UnpinPostResponsePayloadTips(FanvueModel):
+    count: float
+    totalGross: float
+    totalNet: float
+
+
+class UnpinPostResponsePayload(FanvueModel):
+    audience: Literal['subscribers', 'followers-and-subscribers']
+    collections: list[UnpinPostResponsePayloadCollectionsItem]
+    commentsCount: float
+    createdAt: str
+    expiresAt: str | None
+    isPinned: bool
+    likesCount: float
+    mediaPreviewUuid: str | None
+    mediaUuids: list[str]
+    price: float | None
+    publishAt: str | None
+    publishedAt: str | None
+    text: str | None
+    tips: UnpinPostResponsePayloadTips
+    uuid: str
+
+
+class PinPostResponsePayloadCollectionsItem(FanvueModel):
+    label: str
+    uuid: str
+
+
+class PinPostResponsePayloadTips(FanvueModel):
+    count: float
+    totalGross: float
+    totalNet: float
+
+
+class PinPostResponsePayload(FanvueModel):
+    audience: Literal['subscribers', 'followers-and-subscribers']
+    collections: list[PinPostResponsePayloadCollectionsItem]
+    commentsCount: float
+    createdAt: str
+    expiresAt: str | None
+    isPinned: bool
+    likesCount: float
+    mediaPreviewUuid: str | None
+    mediaUuids: list[str]
+    price: float | None
+    publishAt: str | None
+    publishedAt: str | None
+    text: str | None
+    tips: PinPostResponsePayloadTips
+    uuid: str
+
+
+class RepostPostResponsePayloadCollectionsItem(FanvueModel):
+    label: str
+    uuid: str
+
+
+class RepostPostResponsePayloadTips(FanvueModel):
+    count: float
+    totalGross: float
+    totalNet: float
+
+
+class RepostPostResponsePayload(FanvueModel):
+    audience: Literal['subscribers', 'followers-and-subscribers']
+    collections: list[RepostPostResponsePayloadCollectionsItem]
+    commentsCount: float
+    createdAt: str
+    expiresAt: str | None
+    isPinned: bool
+    likesCount: float
+    mediaPreviewUuid: str | None
+    mediaUuids: list[str]
+    price: float | None
+    publishAt: str | None
+    publishedAt: str | None
+    text: str | None
+    tips: RepostPostResponsePayloadTips
+    uuid: str
+
+
+class GetPostTipsResponsePayloadDataItemUser(FanvueModel):
+    avatarUrl: str | None
+    displayName: str
+    handle: str
+    isTopSpender: bool
+    nickname: str | None
+    registeredAt: str
+    uuid: str
+
+
+class GetPostTipsResponsePayloadDataItem(FanvueModel):
+    createdAt: str | None
+    gross: float
+    net: float
+    user: GetPostTipsResponsePayloadDataItemUser | None
+
+
+class GetPostTipsResponsePayloadPagination(FanvueModel):
+    hasMore: bool
+    page: float
+    size: float
+
+
+class GetPostTipsResponsePayload(FanvueModel):
+    data: list[GetPostTipsResponsePayloadDataItem]
+    pagination: GetPostTipsResponsePayloadPagination
+
+
+class ListSubscribersResponsePayloadDataItem(FanvueModel):
+    avatarUrl: str | None
+    displayName: str
+    handle: str
+    isTopSpender: bool
+    nickname: str | None
+    registeredAt: str
+    uuid: str
+
+
+class ListSubscribersResponsePayloadPagination(FanvueModel):
+    hasMore: bool
+    page: float
+    size: float
+
+
+class ListSubscribersResponsePayload(FanvueModel):
+    data: list[ListSubscribersResponsePayloadDataItem]
+    pagination: ListSubscribersResponsePayloadPagination
+
+
+class ListTrackingLinksResponsePayloadDataItemEarnings(FanvueModel):
+    totalGross: float
+    totalNet: float
+
+
+class ListTrackingLinksResponsePayloadDataItemEngagement(FanvueModel):
+    acquiredFollowers: float
+    acquiredSubscribers: float
+    totalFollowers: float
+    totalSubscribers: float
+
+
+class ListTrackingLinksResponsePayloadDataItem(FanvueModel):
+    clicks: float
+    createdAt: str
+    earnings: ListTrackingLinksResponsePayloadDataItemEarnings | None
+    engagement: ListTrackingLinksResponsePayloadDataItemEngagement
+    externalSocialPlatform: Literal['facebook', 'instagram', 'other', 'reddit', 'snapchat', 'tiktok', 'twitter', 'youtube']
+    linkUrl: str
+    name: str
+    uuid: str
+
+
+class ListTrackingLinksResponsePayload(FanvueModel):
+    data: list[ListTrackingLinksResponsePayloadDataItem]
+    nextCursor: str | None
+
+
+class CreateTrackingLinkResponsePayloadEarnings(FanvueModel):
+    totalGross: float
+    totalNet: float
+
+
+class CreateTrackingLinkResponsePayloadEngagement(FanvueModel):
+    acquiredFollowers: float
+    acquiredSubscribers: float
+    totalFollowers: float
+    totalSubscribers: float
+
+
+class CreateTrackingLinkResponsePayload(FanvueModel):
+    clicks: float
+    createdAt: str
+    earnings: CreateTrackingLinkResponsePayloadEarnings | None
+    engagement: CreateTrackingLinkResponsePayloadEngagement
+    externalSocialPlatform: Literal['facebook', 'instagram', 'other', 'reddit', 'snapchat', 'tiktok', 'twitter', 'youtube']
+    linkUrl: str
+    name: str
+    uuid: str
+
+
+class ListTrackingLinkUsersResponsePayloadDataItem(FanvueModel):
+    avatarUrl: str | None
+    displayName: str
+    handle: str
+    isTopSpender: bool
+    nickname: str | None
+    registeredAt: str
+    status: Literal['subscriber', 'follower', 'expired', 'deleted'] | None
+    uuid: str
+
+
+class ListTrackingLinkUsersResponsePayload(FanvueModel):
+    data: list[ListTrackingLinkUsersResponsePayloadDataItem]
+    nextCursor: str | None
+
+
+class GetUserTrackingMetadataResponsePayload(FanvueModel):
+    metadata: dict[str, str] | None
+
+
+class GetAccountResponsePayloadAccountEarnings(FanvueModel):
+    availableBalance: float
+    lastPayoutAt: str | None
+    total: float
+
+
+class GetAccountResponsePayloadAccountFans(FanvueModel):
+    followers: float
+    subscribers: float
+
+
+class GetAccountResponsePayloadAccount(FanvueModel):
+    earnings: GetAccountResponsePayloadAccountEarnings
+    fans: GetAccountResponsePayloadAccountFans
+    status: Literal['active', 'suspended']
+
+
+class GetAccountResponsePayload(FanvueModel):
+    account: GetAccountResponsePayloadAccount
+    avatarUrl: str | None
+    bannerUrl: str | None
+    bio: str
+    createdAt: str
+    displayName: str
+    email: str
+    handle: str
+    isCreator: bool
+    updatedAt: str | None
+    uuid: str
+
+
+class GetCurrentUserResponsePayloadContentCounts(FanvueModel):
+    audioCount: float
+    imageCount: float
+    payToViewPostCount: float
+    postCount: float
+    videoCount: float
+
+
+class GetCurrentUserResponsePayloadFanCounts(FanvueModel):
+    followersCount: float
+    subscribersCount: float
+
+
+class GetCurrentUserResponsePayload(FanvueModel):
+    avatarUrl: str | None
+    bannerUrl: str | None
+    bio: str
+    contentCounts: GetCurrentUserResponsePayloadContentCounts | None = None
+    createdAt: str
+    displayName: str
+    email: str
+    fanCounts: GetCurrentUserResponsePayloadFanCounts | None = None
+    handle: str
+    isCreator: bool
+    likesCount: float | None = None
+    updatedAt: str | None
+    uuid: str
+
+
+class ListVaultFoldersResponsePayloadDataItem(FanvueModel):
+    createdAt: str | None
+    mediaCount: float
+    name: str
+
+
+class ListVaultFoldersResponsePayloadPagination(FanvueModel):
+    hasMore: bool
+    page: float
+    size: float
+
+
+class ListVaultFoldersResponsePayload(FanvueModel):
+    data: list[ListVaultFoldersResponsePayloadDataItem]
+    pagination: ListVaultFoldersResponsePayloadPagination
+
+
+class CreateVaultFolderResponsePayload(FanvueModel):
+    createdAt: str | None
+    mediaCount: float
+    name: str
+
+
+class GetVaultFolderResponsePayload(FanvueModel):
+    createdAt: str | None
+    mediaCount: float
+    name: str
+
+
+class ListVaultFolderMediaResponsePayloadDataItem(FanvueModel):
+    createdAt: str | None
+    mediaType: str
+    name: str | None
+    uuid: str
+
+
+class ListVaultFolderMediaResponsePayloadPagination(FanvueModel):
+    hasMore: bool
+    page: float
+    size: float
+
+
+class ListVaultFolderMediaResponsePayload(FanvueModel):
+    data: list[ListVaultFolderMediaResponsePayloadDataItem]
+    pagination: ListVaultFolderMediaResponsePayloadPagination
+
+
+class AttachMediaToVaultFolderResponsePayload(FanvueModel):
+    addedCount: float
+
+
+ListAgencyChatsResponse: TypeAlias = ListAgencyChatsResponsePayload
+CreateCreatorInviteResponse: TypeAlias = CreateCreatorInviteResponsePayload
+ListAgencyEarningsByDayResponse: TypeAlias = ListAgencyEarningsByDayResponsePayload
+GetChatterLeaderboardResponse: TypeAlias = GetChatterLeaderboardResponsePayload
+CreateAgencyInviteResponse: TypeAlias = CreateAgencyInviteResponsePayload
+ListAgencySubscribersResponse: TypeAlias = ListAgencySubscribersResponsePayload
+ListAgencySubscribersHistoryResponse: TypeAlias = ListAgencySubscribersHistoryResponsePayload
+ListTeamMembersResponse: TypeAlias = list[ListTeamMembersResponsePayloadItem]
+UpdateTeamMemberResponse: TypeAlias = UpdateTeamMemberResponsePayload
+GetAppSubscriptionStatusResponse: TypeAlias = GetAppSubscriptionStatusResponsePayload
+GetAppCurrentUserSubscriptionResponse: TypeAlias = GetAppCurrentUserSubscriptionResponsePayload
+ListChatsResponse: TypeAlias = ListChatsResponsePayload
+CreateChatResponse: TypeAlias = CreateChatResponsePayload
+GetCustomListsResponse: TypeAlias = GetCustomListsResponsePayload
+CreateCustomListResponse: TypeAlias = CreateCustomListResponsePayload
+GetCustomListMembersResponse: TypeAlias = GetCustomListMembersResponsePayload
+AddMembersToCustomListResponse: TypeAlias = AddMembersToCustomListResponsePayload
+GetSmartListsResponse: TypeAlias = list[GetSmartListsResponsePayloadItem]
+GetSmartListMembersResponse: TypeAlias = GetSmartListMembersResponsePayload
+ListMassMessagesResponse: TypeAlias = ListMassMessagesResponsePayload
+SendMassMessageResponse: TypeAlias = SendMassMessageResponsePayload
+MessagesBatchResponse: TypeAlias = MessagesBatchResponsePayload
+GetBatchStatusesResponse: TypeAlias = dict[str, GetBatchStatusesResponsePayloadValue]
+ListTemplateMessagesResponse: TypeAlias = ListTemplateMessagesResponsePayload
+GetTemplateMessageResponse: TypeAlias = GetTemplateMessageResponsePayload
+GetUnreadChatsCountResponse: TypeAlias = GetUnreadChatsCountResponsePayload
+ListMediaResponse: TypeAlias = ListMediaResponsePayload
+SendMessageResponse: TypeAlias = SendMessageResponsePayload
+ListMessagesResponse: TypeAlias = ListMessagesResponsePayload
+GetMessageMediaByUuidsResponse: TypeAlias = GetMessageMediaByUuidsResponsePayload
+ListCollectionsResponse: TypeAlias = ListCollectionsResponsePayload
+CreateCollectionResponse: TypeAlias = CreateCollectionResponsePayload
+ListCreatorsResponse: TypeAlias = ListCreatorsResponsePayload
+GetCreatorAccountResponse: TypeAlias = GetCreatorAccountResponsePayload
+ListCreatorChatsResponse: TypeAlias = ListCreatorChatsResponsePayload
+CreateCreatorChatResponse: TypeAlias = CreateCreatorChatResponsePayload
+GetCreatorCustomListsResponse: TypeAlias = GetCreatorCustomListsResponsePayload
+GetCreatorCustomListMembersResponse: TypeAlias = GetCreatorCustomListMembersResponsePayload
+GetCreatorSmartListsResponse: TypeAlias = list[GetCreatorSmartListsResponsePayloadItem]
+GetCreatorSmartListMembersResponse: TypeAlias = GetCreatorSmartListMembersResponsePayload
+ListCreatorMassMessagesResponse: TypeAlias = ListCreatorMassMessagesResponsePayload
+SendCreatorMassMessageResponse: TypeAlias = SendCreatorMassMessageResponsePayload
+ListCreatorChatMediaResponse: TypeAlias = ListCreatorChatMediaResponsePayload
+SendCreatorMessageResponse: TypeAlias = SendCreatorMessageResponsePayload
+ListCreatorMessagesResponse: TypeAlias = ListCreatorMessagesResponsePayload
+GetCreatorMessageMediaByUuidsResponse: TypeAlias = GetCreatorMessageMediaByUuidsResponsePayload
+ListCreatorFollowersResponse: TypeAlias = ListCreatorFollowersResponsePayload
+GetCreatorEarningsResponse: TypeAlias = GetCreatorEarningsResponsePayload
+GetCreatorEarningsSummaryResponse: TypeAlias = GetCreatorEarningsSummaryResponsePayload
+GetCreatorSubscribersResponse: TypeAlias = GetCreatorSubscribersResponsePayload
+GetCreatorTopSpendersResponse: TypeAlias = GetCreatorTopSpendersResponsePayload
+GetCreatorMediaResponse: TypeAlias = GetCreatorMediaResponsePayload
+CreateCreatorUploadSessionResponse: TypeAlias = CreateCreatorUploadSessionResponsePayload
+CompleteCreatorUploadSessionResponse: TypeAlias = CompleteCreatorUploadSessionResponsePayload
+GetCreatorMediaByUuidResponse: TypeAlias = GetCreatorMediaByUuidResponsePayloadOption1 | GetCreatorMediaByUuidResponsePayloadOption2
+ListCreatorNotificationsResponse: TypeAlias = ListCreatorNotificationsResponsePayload
+GetCreatorPostsResponse: TypeAlias = GetCreatorPostsResponsePayload
+CreateCreatorPostResponse: TypeAlias = CreateCreatorPostResponsePayload
+UpdateCreatorPostResponse: TypeAlias = UpdateCreatorPostResponsePayload
+GetCreatorPostCommentsResponse: TypeAlias = GetCreatorPostCommentsResponsePayload
+CreateCreatorPostCommentResponse: TypeAlias = CreateCreatorPostCommentResponsePayload
+UnpinCreatorPostResponse: TypeAlias = UnpinCreatorPostResponsePayload
+PinCreatorPostResponse: TypeAlias = PinCreatorPostResponsePayload
+RepostCreatorPostResponse: TypeAlias = RepostCreatorPostResponsePayload
+ListCreatorSubscribersResponse: TypeAlias = ListCreatorSubscribersResponsePayload
+GetOnlineSubscribersResponse: TypeAlias = GetOnlineSubscribersResponsePayload
+ListCreatorTrackingLinksResponse: TypeAlias = ListCreatorTrackingLinksResponsePayload
+CreateCreatorTrackingLinkResponse: TypeAlias = CreateCreatorTrackingLinkResponsePayload
+ListCreatorTrackingLinkUsersResponse: TypeAlias = ListCreatorTrackingLinkUsersResponsePayload
+GetCreatorUserTrackingMetadataResponse: TypeAlias = GetCreatorUserTrackingMetadataResponsePayload
+ListCreatorVaultFoldersResponse: TypeAlias = ListCreatorVaultFoldersResponsePayload
+CreateCreatorVaultFolderResponse: TypeAlias = CreateCreatorVaultFolderResponsePayload
+GetCreatorVaultFolderResponse: TypeAlias = GetCreatorVaultFolderResponsePayload
+ListCreatorVaultFolderMediaResponse: TypeAlias = ListCreatorVaultFolderMediaResponsePayload
+AttachCreatorVaultMediaResponse: TypeAlias = AttachCreatorVaultMediaResponsePayload
+ListFollowersResponse: TypeAlias = ListFollowersResponsePayload
+GetEarningsResponse: TypeAlias = GetEarningsResponsePayload
+GetEarningsPercentileResponse: TypeAlias = GetEarningsPercentileResponsePayload
+GetEarningsSummaryResponse: TypeAlias = GetEarningsSummaryResponsePayload
+GetBulkFanInsightsResponse: TypeAlias = GetBulkFanInsightsResponsePayload
+BatchFanInsightsResponse: TypeAlias = dict[str, BatchFanInsightsResponsePayloadValueOption1 | BatchFanInsightsResponsePayloadValueOption2]
+GetFanInsightsResponse: TypeAlias = GetFanInsightsResponsePayload
+GetSpendingResponse: TypeAlias = GetSpendingResponsePayload
+GetSubscribersResponse: TypeAlias = GetSubscribersResponsePayload
+GetTopSpendersResponse: TypeAlias = GetTopSpendersResponsePayload
+GetUserMediaResponse: TypeAlias = GetUserMediaResponsePayload
+GetBulkMediaResponse: TypeAlias = GetBulkMediaResponsePayload
+GetMediaLinkPurchaseStatusResponse: TypeAlias = GetMediaLinkPurchaseStatusResponsePayload
+CreateUploadSessionResponse: TypeAlias = CreateUploadSessionResponsePayload
+CompleteUploadSessionResponse: TypeAlias = CompleteUploadSessionResponsePayload
+GetUserMediaByUuidResponse: TypeAlias = GetUserMediaByUuidResponsePayloadOption1 | GetUserMediaByUuidResponsePayloadOption2
+GetEntitledMediaResponse: TypeAlias = GetEntitledMediaResponsePayloadOption1 | GetEntitledMediaResponsePayloadOption2
+GrantMediaResponse: TypeAlias = GrantMediaResponsePayload
+ListNotificationsResponse: TypeAlias = ListNotificationsResponsePayload
+GetPostsResponse: TypeAlias = GetPostsResponsePayload
+CreatePostResponse: TypeAlias = CreatePostResponsePayload
+GetPostByUuidResponse: TypeAlias = GetPostByUuidResponsePayload
+UpdatePostResponse: TypeAlias = UpdatePostResponsePayload
+GetPostCommentsResponse: TypeAlias = GetPostCommentsResponsePayload
+CreatePostCommentResponse: TypeAlias = CreatePostCommentResponsePayload
+GetPostLikesResponse: TypeAlias = GetPostLikesResponsePayload
+UnpinPostResponse: TypeAlias = UnpinPostResponsePayload
+PinPostResponse: TypeAlias = PinPostResponsePayload
+RepostPostResponse: TypeAlias = RepostPostResponsePayload
+GetPostTipsResponse: TypeAlias = GetPostTipsResponsePayload
+ListSubscribersResponse: TypeAlias = ListSubscribersResponsePayload
+ListTrackingLinksResponse: TypeAlias = ListTrackingLinksResponsePayload
+CreateTrackingLinkResponse: TypeAlias = CreateTrackingLinkResponsePayload
+ListTrackingLinkUsersResponse: TypeAlias = ListTrackingLinkUsersResponsePayload
+GetUserTrackingMetadataResponse: TypeAlias = GetUserTrackingMetadataResponsePayload
+GetAccountResponse: TypeAlias = GetAccountResponsePayload
+GetCurrentUserResponse: TypeAlias = GetCurrentUserResponsePayload
+ListVaultFoldersResponse: TypeAlias = ListVaultFoldersResponsePayload
+CreateVaultFolderResponse: TypeAlias = CreateVaultFolderResponsePayload
+GetVaultFolderResponse: TypeAlias = GetVaultFolderResponsePayload
+ListVaultFolderMediaResponse: TypeAlias = ListVaultFolderMediaResponsePayload
+AttachMediaToVaultFolderResponse: TypeAlias = AttachMediaToVaultFolderResponsePayload
 
 
 OPERATION_RESPONSE_ADAPTERS: dict[str, TypeAdapter[Any]] = {
     'add_members_to_custom_list': TypeAdapter(AddMembersToCustomListResponse),
+    'attach_creator_vault_media': TypeAdapter(AttachCreatorVaultMediaResponse),
     'attach_media_to_vault_folder': TypeAdapter(AttachMediaToVaultFolderResponse),
+    'batch_fan_insights': TypeAdapter(BatchFanInsightsResponse),
     'complete_creator_upload_session': TypeAdapter(CompleteCreatorUploadSessionResponse),
     'complete_upload_session': TypeAdapter(CompleteUploadSessionResponse),
+    'create_agency_invite': TypeAdapter(CreateAgencyInviteResponse),
     'create_chat': TypeAdapter(CreateChatResponse),
+    'create_collection': TypeAdapter(CreateCollectionResponse),
     'create_creator_chat': TypeAdapter(CreateCreatorChatResponse),
+    'create_creator_invite': TypeAdapter(CreateCreatorInviteResponse),
     'create_creator_post': TypeAdapter(CreateCreatorPostResponse),
+    'create_creator_post_comment': TypeAdapter(CreateCreatorPostCommentResponse),
     'create_creator_tracking_link': TypeAdapter(CreateCreatorTrackingLinkResponse),
     'create_creator_upload_session': TypeAdapter(CreateCreatorUploadSessionResponse),
+    'create_creator_vault_folder': TypeAdapter(CreateCreatorVaultFolderResponse),
     'create_custom_list': TypeAdapter(CreateCustomListResponse),
     'create_post': TypeAdapter(CreatePostResponse),
+    'create_post_comment': TypeAdapter(CreatePostCommentResponse),
     'create_tracking_link': TypeAdapter(CreateTrackingLinkResponse),
     'create_upload_session': TypeAdapter(CreateUploadSessionResponse),
     'create_vault_folder': TypeAdapter(CreateVaultFolderResponse),
+    'get_account': TypeAdapter(GetAccountResponse),
+    'get_app_current_user_subscription': TypeAdapter(GetAppCurrentUserSubscriptionResponse),
+    'get_app_subscription_status': TypeAdapter(GetAppSubscriptionStatusResponse),
     'get_batch_statuses': TypeAdapter(GetBatchStatusesResponse),
+    'get_bulk_fan_insights': TypeAdapter(GetBulkFanInsightsResponse),
+    'get_bulk_media': TypeAdapter(GetBulkMediaResponse),
+    'get_chatter_leaderboard': TypeAdapter(GetChatterLeaderboardResponse),
+    'get_creator_account': TypeAdapter(GetCreatorAccountResponse),
     'get_creator_custom_list_members': TypeAdapter(GetCreatorCustomListMembersResponse),
     'get_creator_custom_lists': TypeAdapter(GetCreatorCustomListsResponse),
     'get_creator_earnings': TypeAdapter(GetCreatorEarningsResponse),
+    'get_creator_earnings_summary': TypeAdapter(GetCreatorEarningsSummaryResponse),
     'get_creator_media': TypeAdapter(GetCreatorMediaResponse),
     'get_creator_media_by_uuid': TypeAdapter(GetCreatorMediaByUuidResponse),
+    'get_creator_message_media_by_uuids': TypeAdapter(GetCreatorMessageMediaByUuidsResponse),
+    'get_creator_post_comments': TypeAdapter(GetCreatorPostCommentsResponse),
+    'get_creator_posts': TypeAdapter(GetCreatorPostsResponse),
     'get_creator_smart_list_members': TypeAdapter(GetCreatorSmartListMembersResponse),
     'get_creator_smart_lists': TypeAdapter(GetCreatorSmartListsResponse),
     'get_creator_subscribers': TypeAdapter(GetCreatorSubscribersResponse),
     'get_creator_top_spenders': TypeAdapter(GetCreatorTopSpendersResponse),
-    'get_creator_upload_part_url': TypeAdapter(GetCreatorUploadPartUrlResponse),
+    'get_creator_user_tracking_metadata': TypeAdapter(GetCreatorUserTrackingMetadataResponse),
+    'get_creator_vault_folder': TypeAdapter(GetCreatorVaultFolderResponse),
     'get_current_user': TypeAdapter(GetCurrentUserResponse),
     'get_custom_list_members': TypeAdapter(GetCustomListMembersResponse),
     'get_custom_lists': TypeAdapter(GetCustomListsResponse),
     'get_earnings': TypeAdapter(GetEarningsResponse),
+    'get_earnings_percentile': TypeAdapter(GetEarningsPercentileResponse),
+    'get_earnings_summary': TypeAdapter(GetEarningsSummaryResponse),
+    'get_entitled_media': TypeAdapter(GetEntitledMediaResponse),
     'get_fan_insights': TypeAdapter(GetFanInsightsResponse),
+    'get_media_link_purchase_status': TypeAdapter(GetMediaLinkPurchaseStatusResponse),
+    'get_message_media_by_uuids': TypeAdapter(GetMessageMediaByUuidsResponse),
+    'get_online_subscribers': TypeAdapter(GetOnlineSubscribersResponse),
     'get_post_by_uuid': TypeAdapter(GetPostByUuidResponse),
     'get_post_comments': TypeAdapter(GetPostCommentsResponse),
     'get_post_likes': TypeAdapter(GetPostLikesResponse),
@@ -1340,40 +2892,65 @@ OPERATION_RESPONSE_ADAPTERS: dict[str, TypeAdapter[Any]] = {
     'get_posts': TypeAdapter(GetPostsResponse),
     'get_smart_list_members': TypeAdapter(GetSmartListMembersResponse),
     'get_smart_lists': TypeAdapter(GetSmartListsResponse),
+    'get_spending': TypeAdapter(GetSpendingResponse),
     'get_subscribers': TypeAdapter(GetSubscribersResponse),
     'get_template_message': TypeAdapter(GetTemplateMessageResponse),
     'get_top_spenders': TypeAdapter(GetTopSpendersResponse),
     'get_unread_chats_count': TypeAdapter(GetUnreadChatsCountResponse),
-    'get_upload_part_url': TypeAdapter(GetUploadPartUrlResponse),
     'get_user_media': TypeAdapter(GetUserMediaResponse),
     'get_user_media_by_uuid': TypeAdapter(GetUserMediaByUuidResponse),
+    'get_user_tracking_metadata': TypeAdapter(GetUserTrackingMetadataResponse),
     'get_vault_folder': TypeAdapter(GetVaultFolderResponse),
+    'grant_media': TypeAdapter(GrantMediaResponse),
+    'list_agency_chats': TypeAdapter(ListAgencyChatsResponse),
+    'list_agency_earnings_by_day': TypeAdapter(ListAgencyEarningsByDayResponse),
+    'list_agency_subscribers': TypeAdapter(ListAgencySubscribersResponse),
+    'list_agency_subscribers_history': TypeAdapter(ListAgencySubscribersHistoryResponse),
     'list_chats': TypeAdapter(ListChatsResponse),
+    'list_collections': TypeAdapter(ListCollectionsResponse),
     'list_creator_chat_media': TypeAdapter(ListCreatorChatMediaResponse),
     'list_creator_chats': TypeAdapter(ListCreatorChatsResponse),
     'list_creator_followers': TypeAdapter(ListCreatorFollowersResponse),
+    'list_creator_mass_messages': TypeAdapter(ListCreatorMassMessagesResponse),
     'list_creator_messages': TypeAdapter(ListCreatorMessagesResponse),
+    'list_creator_notifications': TypeAdapter(ListCreatorNotificationsResponse),
     'list_creator_subscribers': TypeAdapter(ListCreatorSubscribersResponse),
+    'list_creator_tracking_link_users': TypeAdapter(ListCreatorTrackingLinkUsersResponse),
     'list_creator_tracking_links': TypeAdapter(ListCreatorTrackingLinksResponse),
+    'list_creator_vault_folder_media': TypeAdapter(ListCreatorVaultFolderMediaResponse),
+    'list_creator_vault_folders': TypeAdapter(ListCreatorVaultFoldersResponse),
     'list_creators': TypeAdapter(ListCreatorsResponse),
     'list_followers': TypeAdapter(ListFollowersResponse),
+    'list_mass_messages': TypeAdapter(ListMassMessagesResponse),
     'list_media': TypeAdapter(ListMediaResponse),
     'list_messages': TypeAdapter(ListMessagesResponse),
+    'list_notifications': TypeAdapter(ListNotificationsResponse),
     'list_subscribers': TypeAdapter(ListSubscribersResponse),
     'list_team_members': TypeAdapter(ListTeamMembersResponse),
     'list_template_messages': TypeAdapter(ListTemplateMessagesResponse),
+    'list_tracking_link_users': TypeAdapter(ListTrackingLinkUsersResponse),
     'list_tracking_links': TypeAdapter(ListTrackingLinksResponse),
     'list_vault_folder_media': TypeAdapter(ListVaultFolderMediaResponse),
     'list_vault_folders': TypeAdapter(ListVaultFoldersResponse),
+    'messages_batch': TypeAdapter(MessagesBatchResponse),
+    'pin_creator_post': TypeAdapter(PinCreatorPostResponse),
+    'pin_post': TypeAdapter(PinPostResponse),
+    'repost_creator_post': TypeAdapter(RepostCreatorPostResponse),
+    'repost_post': TypeAdapter(RepostPostResponse),
     'send_creator_mass_message': TypeAdapter(SendCreatorMassMessageResponse),
     'send_creator_message': TypeAdapter(SendCreatorMessageResponse),
     'send_mass_message': TypeAdapter(SendMassMessageResponse),
     'send_message': TypeAdapter(SendMessageResponse),
+    'unpin_creator_post': TypeAdapter(UnpinCreatorPostResponse),
+    'unpin_post': TypeAdapter(UnpinPostResponse),
+    'update_creator_post': TypeAdapter(UpdateCreatorPostResponse),
+    'update_post': TypeAdapter(UpdatePostResponse),
     'update_team_member': TypeAdapter(UpdateTeamMemberResponse),
 }
 
 
 def parse_operation_response(operation_id: str, payload: ResponseData) -> Any:
+    """Validate a raw payload into its typed model for ``operation_id``."""
     if payload is None or isinstance(payload, bytes):
         return payload
 

@@ -45,3 +45,42 @@ jobs:
 
       - name: Pytest
         run: pytest
+
+      - name: Verify generated SDK is in sync with vendored spec
+        run: |
+          python scripts/generate_sdk.py
+          git diff --exit-code -- fanvue_sdk docs-endpoints.md
+
+  go:
+    name: Go (build, vet, test)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: go
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.23"
+          cache: false
+
+      - name: Verify gofmt
+        run: test -z "$(gofmt -l .)" || (gofmt -l . && exit 1)
+
+      - name: Build
+        run: go build ./...
+
+      - name: Vet
+        run: go vet ./...
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.64.8
+          working-directory: go
+
+      - name: Test (race)
+        run: go test -race -count=1 ./...

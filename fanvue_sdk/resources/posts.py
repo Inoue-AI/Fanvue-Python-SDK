@@ -3,15 +3,20 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
-from typing import Any, cast
+from typing import Any, Literal, cast
 
 from fanvue_sdk.models import (
+    CreatePostCommentResponse,
     CreatePostResponse,
     GetPostByUuidResponse,
     GetPostCommentsResponse,
     GetPostLikesResponse,
     GetPostsResponse,
     GetPostTipsResponse,
+    PinPostResponse,
+    RepostPostResponse,
+    UnpinPostResponse,
+    UpdatePostResponse,
 )
 from fanvue_sdk.resources.base import BaseResource
 
@@ -19,24 +24,70 @@ from fanvue_sdk.resources.base import BaseResource
 class PostsResource(BaseResource):
     """PostsResource endpoints."""
 
-    async def create_post(self, *, body: Mapping[str, Any] | None = None) -> CreatePostResponse:
+    async def create_post(self, *, body: Mapping[str, Any]) -> CreatePostResponse:
         """
         Create a new post
 
         `POST /posts`
-        Docs: https://api.fanvue.com/docs/api-reference/reference/posts/create-post
+        Docs: https://api.fanvue.com/docs/api-reference/reference/create-post
         """
         return cast(CreatePostResponse, await self._client._call_operation(
             operation_id='create_post',
             body=body,
         ))
 
+    async def create_post_comment(self, uuid: str, *, body: Mapping[str, Any]) -> CreatePostCommentResponse:
+        """
+        Create a comment on a post
+
+        `POST /posts/{uuid}/comments`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/create-post-comment
+        """
+        return cast(CreatePostCommentResponse, await self._client._call_operation(
+            operation_id='create_post_comment',
+            path_params={
+                'uuid': uuid,
+            },
+            body=body,
+        ))
+
+    async def delete_post(self, uuid: str) -> None:
+        """
+        Delete a post
+
+        `DELETE /posts/{uuid}`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/delete-post
+        """
+        await self._client._call_operation(
+            operation_id='delete_post',
+            path_params={
+                'uuid': uuid,
+            },
+        )
+        return None
+
+    async def delete_post_comment(self, uuid: str, comment_uuid: str) -> None:
+        """
+        Delete a comment from a post
+
+        `DELETE /posts/{uuid}/comments/{commentUuid}`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/delete-post-comment
+        """
+        await self._client._call_operation(
+            operation_id='delete_post_comment',
+            path_params={
+                'uuid': uuid,
+                'commentUuid': comment_uuid,
+            },
+        )
+        return None
+
     async def get_post_by_uuid(self, uuid: str) -> GetPostByUuidResponse:
         """
         Get post by UUID
 
         `GET /posts/{uuid}`
-        Docs: https://api.fanvue.com/docs/api-reference/reference/posts/get-post-by-uuid
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-post-by-uuid
         """
         return cast(GetPostByUuidResponse, await self._client._call_operation(
             operation_id='get_post_by_uuid',
@@ -50,7 +101,7 @@ class PostsResource(BaseResource):
         Get comments for a post
 
         `GET /posts/{uuid}/comments`
-        Docs: https://api.fanvue.com/docs/api-reference/reference/posts/get-post-comments
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-post-comments
         """
         return cast(GetPostCommentsResponse, await self._client._call_operation(
             operation_id='get_post_comments',
@@ -68,7 +119,7 @@ class PostsResource(BaseResource):
         Get likes for a post
 
         `GET /posts/{uuid}/likes`
-        Docs: https://api.fanvue.com/docs/api-reference/reference/posts/get-post-likes
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-post-likes
         """
         return cast(GetPostLikesResponse, await self._client._call_operation(
             operation_id='get_post_likes',
@@ -86,7 +137,7 @@ class PostsResource(BaseResource):
         Get tips for a post
 
         `GET /posts/{uuid}/tips`
-        Docs: https://api.fanvue.com/docs/api-reference/reference/posts/get-post-tips
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-post-tips
         """
         return cast(GetPostTipsResponse, await self._client._call_operation(
             operation_id='get_post_tips',
@@ -99,17 +150,75 @@ class PostsResource(BaseResource):
             },
         ))
 
-    async def get_posts(self, *, page: float | None = None, size: float | None = None) -> GetPostsResponse:
+    async def get_posts(self, *, page: float | None = None, size: float | None = None, include_unpublished: Literal['true', 'false'] | None = None) -> GetPostsResponse:
         """
         Get list of posts
 
         `GET /posts`
-        Docs: https://api.fanvue.com/docs/api-reference/reference/posts/get-posts
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-posts
         """
         return cast(GetPostsResponse, await self._client._call_operation(
             operation_id='get_posts',
             query_params={
                 'page': page,
                 'size': size,
+                'includeUnpublished': include_unpublished,
             },
+        ))
+
+    async def pin_post(self, uuid: str) -> PinPostResponse:
+        """
+        Pin a post
+
+        `POST /posts/{uuid}/pin`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/pin-post
+        """
+        return cast(PinPostResponse, await self._client._call_operation(
+            operation_id='pin_post',
+            path_params={
+                'uuid': uuid,
+            },
+        ))
+
+    async def repost_post(self, uuid: str) -> RepostPostResponse:
+        """
+        Repost content
+
+        `POST /posts/{uuid}/repost`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/repost-post
+        """
+        return cast(RepostPostResponse, await self._client._call_operation(
+            operation_id='repost_post',
+            path_params={
+                'uuid': uuid,
+            },
+        ))
+
+    async def unpin_post(self, uuid: str) -> UnpinPostResponse:
+        """
+        Unpin a post
+
+        `DELETE /posts/{uuid}/pin`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/unpin-post
+        """
+        return cast(UnpinPostResponse, await self._client._call_operation(
+            operation_id='unpin_post',
+            path_params={
+                'uuid': uuid,
+            },
+        ))
+
+    async def update_post(self, uuid: str, *, body: Mapping[str, Any]) -> UpdatePostResponse:
+        """
+        Update a post
+
+        `PATCH /posts/{uuid}`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/update-post
+        """
+        return cast(UpdatePostResponse, await self._client._call_operation(
+            operation_id='update_post',
+            path_params={
+                'uuid': uuid,
+            },
+            body=body,
         ))

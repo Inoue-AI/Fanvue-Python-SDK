@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import cast
 
 from fanvue_sdk.models import (
+    GetAccountResponse,
     GetCurrentUserResponse,
 )
 from fanvue_sdk.resources.base import BaseResource
@@ -13,12 +14,23 @@ from fanvue_sdk.resources.base import BaseResource
 class UsersResource(BaseResource):
     """UsersResource endpoints."""
 
+    async def get_account(self) -> GetAccountResponse:
+        """
+        Get current user's account
+
+        `GET /users/account`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-account
+        """
+        return cast(GetAccountResponse, await self._client._call_operation(
+            operation_id='get_account',
+        ))
+
     async def get_current_user(self) -> GetCurrentUserResponse:
         """
         Get current user
 
         `GET /users/me`
-        Docs: https://api.fanvue.com/docs/api-reference/reference/users/get-current-user
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-current-user
         """
         return cast(GetCurrentUserResponse, await self._client._call_operation(
             operation_id='get_current_user',

@@ -7,7 +7,9 @@ from typing import Any, cast
 
 from fanvue_sdk.models import (
     CreateTrackingLinkResponse,
+    GetUserTrackingMetadataResponse,
     ListTrackingLinksResponse,
+    ListTrackingLinkUsersResponse,
 )
 from fanvue_sdk.resources.base import BaseResource
 
@@ -20,7 +22,7 @@ class TrackingLinksResource(BaseResource):
         Create a tracking link
 
         `POST /tracking-links`
-        Docs: https://api.fanvue.com/docs/api-reference/reference/tracking-links/create-tracking-link
+        Docs: https://api.fanvue.com/docs/api-reference/reference/create-tracking-link
         """
         return cast(CreateTrackingLinkResponse, await self._client._call_operation(
             operation_id='create_tracking_link',
@@ -32,7 +34,7 @@ class TrackingLinksResource(BaseResource):
         Delete a tracking link
 
         `DELETE /tracking-links/{uuid}`
-        Docs: https://api.fanvue.com/docs/api-reference/reference/tracking-links/delete-tracking-link
+        Docs: https://api.fanvue.com/docs/api-reference/reference/delete-tracking-link
         """
         await self._client._call_operation(
             operation_id='delete_tracking_link',
@@ -42,12 +44,45 @@ class TrackingLinksResource(BaseResource):
         )
         return None
 
+    async def get_user_tracking_metadata(self, uuid: str, user_uuid: str) -> GetUserTrackingMetadataResponse:
+        """
+        Get tracking metadata for a user
+
+        `GET /tracking-links/{uuid}/users/{userUuid}/metadata`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-user-tracking-metadata
+        """
+        return cast(GetUserTrackingMetadataResponse, await self._client._call_operation(
+            operation_id='get_user_tracking_metadata',
+            path_params={
+                'uuid': uuid,
+                'userUuid': user_uuid,
+            },
+        ))
+
+    async def list_tracking_link_users(self, uuid: str, *, limit: int | None = None, cursor: str | None = None) -> ListTrackingLinkUsersResponse:
+        """
+        List users for a tracking link
+
+        `GET /tracking-links/{uuid}/users`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/list-tracking-link-users
+        """
+        return cast(ListTrackingLinkUsersResponse, await self._client._call_operation(
+            operation_id='list_tracking_link_users',
+            path_params={
+                'uuid': uuid,
+            },
+            query_params={
+                'limit': limit,
+                'cursor': cursor,
+            },
+        ))
+
     async def list_tracking_links(self, *, limit: int | None = None, cursor: str | None = None, created_after: str | None = None, created_before: str | None = None) -> ListTrackingLinksResponse:
         """
         List tracking links
 
         `GET /tracking-links`
-        Docs: https://api.fanvue.com/docs/api-reference/reference/tracking-links/list-tracking-links
+        Docs: https://api.fanvue.com/docs/api-reference/reference/list-tracking-links
         """
         return cast(ListTrackingLinksResponse, await self._client._call_operation(
             operation_id='list_tracking_links',

@@ -2,12 +2,17 @@
 
 from __future__ import annotations
 
-from collections.abc import Sequence
-from typing import Literal, cast
+from collections.abc import Mapping, Sequence
+from typing import Any, Literal, cast
 
 from fanvue_sdk.models import (
+    BatchFanInsightsResponse,
+    GetBulkFanInsightsResponse,
+    GetEarningsPercentileResponse,
     GetEarningsResponse,
+    GetEarningsSummaryResponse,
     GetFanInsightsResponse,
+    GetSpendingResponse,
     GetSubscribersResponse,
     GetTopSpendersResponse,
 )
@@ -17,12 +22,38 @@ from fanvue_sdk.resources.base import BaseResource
 class InsightsResource(BaseResource):
     """InsightsResource endpoints."""
 
-    async def get_earnings(self, *, start_date: str | None = None, end_date: str | None = None, source: Sequence[Literal['all', 'affiliate', 'mediaLink', 'message', 'post', 'referral', 'renewal', 'subscription', 'tip', 'giveaway']] | None = None, cursor: str | None = None, size: float | None = None) -> GetEarningsResponse:
+    async def batch_fan_insights(self, *, body: Mapping[str, Any]) -> BatchFanInsightsResponse:
+        """
+        Get fan insights in bulk (POST batch)
+
+        `POST /insights/fans/batch`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/batch-fan-insights
+        """
+        return cast(BatchFanInsightsResponse, await self._client._call_operation(
+            operation_id='batch_fan_insights',
+            body=body,
+        ))
+
+    async def get_bulk_fan_insights(self, *, fan_uuids: str) -> GetBulkFanInsightsResponse:
+        """
+        Get fan insights in bulk
+
+        `GET /insights/fans`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-bulk-fan-insights
+        """
+        return cast(GetBulkFanInsightsResponse, await self._client._call_operation(
+            operation_id='get_bulk_fan_insights',
+            query_params={
+                'fanUuids': fan_uuids,
+            },
+        ))
+
+    async def get_earnings(self, *, start_date: str | None = None, end_date: str | None = None, source: Sequence[Literal['all', 'affiliate', 'appStore', 'checkoutLink', 'mediaLink', 'message', 'post', 'referral', 'renewal', 'subscription', 'tip', 'giveaway']] | None = None, cursor: str | None = None, size: float | None = None) -> GetEarningsResponse:
         """
         Get earnings data
 
         `GET /insights/earnings`
-        Docs: https://api.fanvue.com/docs/api-reference/reference/insights/get-earnings
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-earnings
         """
         return cast(GetEarningsResponse, await self._client._call_operation(
             operation_id='get_earnings',
@@ -35,12 +66,40 @@ class InsightsResource(BaseResource):
             },
         ))
 
+    async def get_earnings_percentile(self) -> GetEarningsPercentileResponse:
+        """
+        Get earnings percentile
+
+        `GET /insights/earnings/percentile`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-earnings-percentile
+        """
+        return cast(GetEarningsPercentileResponse, await self._client._call_operation(
+            operation_id='get_earnings_percentile',
+        ))
+
+    async def get_earnings_summary(self, *, start_date: str | None = None, end_date: str | None = None, granularity: Literal['day', 'week'] | None = None, timezone: str | None = None) -> GetEarningsSummaryResponse:
+        """
+        Get aggregated earnings summary
+
+        `GET /insights/earnings/summary`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-earnings-summary
+        """
+        return cast(GetEarningsSummaryResponse, await self._client._call_operation(
+            operation_id='get_earnings_summary',
+            query_params={
+                'startDate': start_date,
+                'endDate': end_date,
+                'granularity': granularity,
+                'timezone': timezone,
+            },
+        ))
+
     async def get_fan_insights(self, user_uuid: str) -> GetFanInsightsResponse:
         """
         Get fan insights
 
         `GET /insights/fans/{userUuid}`
-        Docs: https://api.fanvue.com/docs/api-reference/reference/insights/get-fan-insights
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-fan-insights
         """
         return cast(GetFanInsightsResponse, await self._client._call_operation(
             operation_id='get_fan_insights',
@@ -49,12 +108,30 @@ class InsightsResource(BaseResource):
             },
         ))
 
+    async def get_spending(self, *, start_date: str | None = None, end_date: str | None = None, source: Sequence[Literal['all', 'refund', 'chargeback']] | None = None, cursor: str | None = None, size: float | None = None) -> GetSpendingResponse:
+        """
+        Get spending reversal data
+
+        `GET /insights/spending`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-spending
+        """
+        return cast(GetSpendingResponse, await self._client._call_operation(
+            operation_id='get_spending',
+            query_params={
+                'startDate': start_date,
+                'endDate': end_date,
+                'source': source,
+                'cursor': cursor,
+                'size': size,
+            },
+        ))
+
     async def get_subscribers(self, *, start_date: str | None = None, end_date: str | None = None, cursor: str | None = None, size: float | None = None) -> GetSubscribersResponse:
         """
-        Get subscribers count
+        Get subscriber events over time
 
         `GET /insights/subscribers`
-        Docs: https://api.fanvue.com/docs/api-reference/reference/insights/get-subscribers
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-subscribers
         """
         return cast(GetSubscribersResponse, await self._client._call_operation(
             operation_id='get_subscribers',
@@ -71,7 +148,7 @@ class InsightsResource(BaseResource):
         Get top-spending fans
 
         `GET /insights/top-spenders`
-        Docs: https://api.fanvue.com/docs/api-reference/reference/insights/get-top-spenders
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-top-spenders
         """
         return cast(GetTopSpendersResponse, await self._client._call_operation(
             operation_id='get_top_spenders',

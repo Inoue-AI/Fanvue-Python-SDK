@@ -3,32 +3,32 @@
 from __future__ import annotations
 
 from fanvue_sdk.resources.agencies import AgenciesResource
-from fanvue_sdk.resources.chat_custom_list_members import ChatCustomListMembersResource
-from fanvue_sdk.resources.chat_custom_lists import ChatCustomListsResource
-from fanvue_sdk.resources.chat_messages import ChatMessagesResource
-from fanvue_sdk.resources.chat_smart_lists import ChatSmartListsResource
-from fanvue_sdk.resources.chat_templates import ChatTemplatesResource
+from fanvue_sdk.resources.apps import AppsResource
 from fanvue_sdk.resources.chats import ChatsResource
+from fanvue_sdk.resources.collections import CollectionsResource
 from fanvue_sdk.resources.creators import CreatorsResource
+from fanvue_sdk.resources.followers import FollowersResource
 from fanvue_sdk.resources.insights import InsightsResource
 from fanvue_sdk.resources.media import MediaResource
+from fanvue_sdk.resources.notifications import NotificationsResource
 from fanvue_sdk.resources.posts import PostsResource
+from fanvue_sdk.resources.subscribers import SubscribersResource
 from fanvue_sdk.resources.tracking_links import TrackingLinksResource
 from fanvue_sdk.resources.users import UsersResource
 from fanvue_sdk.resources.vault import VaultResource
 
 RESOURCE_FACTORIES = {
     'agencies': AgenciesResource,
-    'chat_custom_list_members': ChatCustomListMembersResource,
-    'chat_custom_lists': ChatCustomListsResource,
-    'chat_messages': ChatMessagesResource,
-    'chat_smart_lists': ChatSmartListsResource,
-    'chat_templates': ChatTemplatesResource,
+    'apps': AppsResource,
     'chats': ChatsResource,
+    'collections': CollectionsResource,
     'creators': CreatorsResource,
+    'followers': FollowersResource,
     'insights': InsightsResource,
     'media': MediaResource,
+    'notifications': NotificationsResource,
     'posts': PostsResource,
+    'subscribers': SubscribersResource,
     'tracking_links': TrackingLinksResource,
     'users': UsersResource,
     'vault': VaultResource,
@@ -36,16 +36,16 @@ RESOURCE_FACTORIES = {
 
 __all__ = [
     'AgenciesResource',
-    'ChatCustomListMembersResource',
-    'ChatCustomListsResource',
-    'ChatMessagesResource',
-    'ChatSmartListsResource',
-    'ChatTemplatesResource',
+    'AppsResource',
     'ChatsResource',
+    'CollectionsResource',
     'CreatorsResource',
+    'FollowersResource',
     'InsightsResource',
     'MediaResource',
+    'NotificationsResource',
     'PostsResource',
+    'SubscribersResource',
     'TrackingLinksResource',
     'UsersResource',
     'VaultResource',

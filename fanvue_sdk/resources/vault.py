@@ -18,12 +18,12 @@ from fanvue_sdk.resources.base import BaseResource
 class VaultResource(BaseResource):
     """VaultResource endpoints."""
 
-    async def attach_media_to_vault_folder(self, folder_name: str, *, body: Mapping[str, Any] | None = None) -> AttachMediaToVaultFolderResponse:
+    async def attach_media_to_vault_folder(self, folder_name: str, *, body: Mapping[str, Any]) -> AttachMediaToVaultFolderResponse:
         """
         Add media to folder
 
         `POST /vault/folders/{folderName}/media`
-        Docs: https://api.fanvue.com/docs/api-reference/reference/vault/attach-media-to-vault-folder
+        Docs: https://api.fanvue.com/docs/api-reference/reference/attach-media-to-vault-folder
         """
         return cast(AttachMediaToVaultFolderResponse, await self._client._call_operation(
             operation_id='attach_media_to_vault_folder',
@@ -33,12 +33,12 @@ class VaultResource(BaseResource):
             body=body,
         ))
 
-    async def create_vault_folder(self, *, body: Mapping[str, Any] | None = None) -> CreateVaultFolderResponse:
+    async def create_vault_folder(self, *, body: Mapping[str, Any]) -> CreateVaultFolderResponse:
         """
         Create a vault folder
 
         `POST /vault/folders`
-        Docs: https://api.fanvue.com/docs/api-reference/reference/vault/create-vault-folder
+        Docs: https://api.fanvue.com/docs/api-reference/reference/create-vault-folder
         """
         return cast(CreateVaultFolderResponse, await self._client._call_operation(
             operation_id='create_vault_folder',
@@ -50,7 +50,7 @@ class VaultResource(BaseResource):
         Delete vault folder
 
         `DELETE /vault/folders/{folderName}`
-        Docs: https://api.fanvue.com/docs/api-reference/reference/vault/delete-vault-folder
+        Docs: https://api.fanvue.com/docs/api-reference/reference/delete-vault-folder
         """
         await self._client._call_operation(
             operation_id='delete_vault_folder',
@@ -65,7 +65,7 @@ class VaultResource(BaseResource):
         Remove media from folder
 
         `DELETE /vault/folders/{folderName}/media/{mediaUuid}`
-        Docs: https://api.fanvue.com/docs/api-reference/reference/vault/detach-media-from-vault-folder
+        Docs: https://api.fanvue.com/docs/api-reference/reference/detach-media-from-vault-folder
         """
         await self._client._call_operation(
             operation_id='detach_media_from_vault_folder',
@@ -81,7 +81,7 @@ class VaultResource(BaseResource):
         Get vault folder details
 
         `GET /vault/folders/{folderName}`
-        Docs: https://api.fanvue.com/docs/api-reference/reference/vault/get-vault-folder
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-vault-folder
         """
         return cast(GetVaultFolderResponse, await self._client._call_operation(
             operation_id='get_vault_folder',
@@ -95,7 +95,7 @@ class VaultResource(BaseResource):
         List media in folder
 
         `GET /vault/folders/{folderName}/media`
-        Docs: https://api.fanvue.com/docs/api-reference/reference/vault/list-vault-folder-media
+        Docs: https://api.fanvue.com/docs/api-reference/reference/list-vault-folder-media
         """
         return cast(ListVaultFolderMediaResponse, await self._client._call_operation(
             operation_id='list_vault_folder_media',
@@ -113,18 +113,18 @@ class VaultResource(BaseResource):
         List vault folders
 
         `GET /vault/folders`
-        Docs: https://api.fanvue.com/docs/api-reference/reference/vault/list-vault-folders
+        Docs: https://api.fanvue.com/docs/api-reference/reference/list-vault-folders
         """
         return cast(ListVaultFoldersResponse, await self._client._call_operation(
             operation_id='list_vault_folders',
         ))
 
-    async def rename_vault_folder(self, folder_name: str, *, body: Mapping[str, Any] | None = None) -> None:
+    async def rename_vault_folder(self, folder_name: str, *, body: Mapping[str, Any]) -> None:
         """
         Rename vault folder
 
         `PATCH /vault/folders/{folderName}`
-        Docs: https://api.fanvue.com/docs/api-reference/reference/vault/rename-vault-folder
+        Docs: https://api.fanvue.com/docs/api-reference/reference/rename-vault-folder
         """
         await self._client._call_operation(
             operation_id='rename_vault_folder',

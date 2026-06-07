@@ -6,11 +6,25 @@ from collections.abc import Mapping, Sequence
 from typing import Any, Literal, cast
 
 from fanvue_sdk.models import (
+    AddMembersToCustomListResponse,
     CreateChatResponse,
+    CreateCustomListResponse,
     GetBatchStatusesResponse,
+    GetCustomListMembersResponse,
+    GetCustomListsResponse,
+    GetMessageMediaByUuidsResponse,
+    GetSmartListMembersResponse,
+    GetSmartListsResponse,
+    GetTemplateMessageResponse,
     GetUnreadChatsCountResponse,
     ListChatsResponse,
+    ListMassMessagesResponse,
     ListMediaResponse,
+    ListMessagesResponse,
+    ListTemplateMessagesResponse,
+    MessagesBatchResponse,
+    SendMassMessageResponse,
+    SendMessageResponse,
 )
 from fanvue_sdk.resources.base import BaseResource
 
@@ -18,28 +32,197 @@ from fanvue_sdk.resources.base import BaseResource
 class ChatsResource(BaseResource):
     """ChatsResource endpoints."""
 
-    async def create_chat(self, *, body: Mapping[str, Any] | None = None) -> CreateChatResponse:
+    async def add_members_to_custom_list(self, uuid: str, *, body: Mapping[str, Any]) -> AddMembersToCustomListResponse:
+        """
+        Add members to a custom list
+
+        `POST /chats/lists/custom/{uuid}/members`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/add-members-to-custom-list
+        """
+        return cast(AddMembersToCustomListResponse, await self._client._call_operation(
+            operation_id='add_members_to_custom_list',
+            path_params={
+                'uuid': uuid,
+            },
+            body=body,
+        ))
+
+    async def create_chat(self, *, body: Mapping[str, Any]) -> CreateChatResponse:
         """
         Create a new chat
 
         `POST /chats`
-        Docs: https://api.fanvue.com/docs/api-reference/reference/chats/create-chat
+        Docs: https://api.fanvue.com/docs/api-reference/reference/create-chat
         """
         return cast(CreateChatResponse, await self._client._call_operation(
             operation_id='create_chat',
             body=body,
         ))
 
-    async def get_batch_statuses(self, *, body: Mapping[str, Any] | None = None) -> GetBatchStatusesResponse:
+    async def create_custom_list(self, *, body: Mapping[str, Any]) -> CreateCustomListResponse:
+        """
+        Create a custom list
+
+        `POST /chats/lists/custom`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/create-custom-list
+        """
+        return cast(CreateCustomListResponse, await self._client._call_operation(
+            operation_id='create_custom_list',
+            body=body,
+        ))
+
+    async def delete_custom_list(self, uuid: str) -> None:
+        """
+        Delete a custom list
+
+        `DELETE /chats/lists/custom/{uuid}`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/delete-custom-list
+        """
+        await self._client._call_operation(
+            operation_id='delete_custom_list',
+            path_params={
+                'uuid': uuid,
+            },
+        )
+        return None
+
+    async def delete_mass_message(self, message_uuid: str) -> None:
+        """
+        Delete a mass message
+
+        `DELETE /chats/mass-messages/{messageUuid}`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/delete-mass-message
+        """
+        await self._client._call_operation(
+            operation_id='delete_mass_message',
+            path_params={
+                'messageUuid': message_uuid,
+            },
+        )
+        return None
+
+    async def delete_message(self, user_uuid: str, message_uuid: str) -> None:
+        """
+        Delete a message
+
+        `DELETE /chats/{userUuid}/messages/{messageUuid}`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/delete-message
+        """
+        await self._client._call_operation(
+            operation_id='delete_message',
+            path_params={
+                'userUuid': user_uuid,
+                'messageUuid': message_uuid,
+            },
+        )
+        return None
+
+    async def get_batch_statuses(self, *, body: Mapping[str, Any]) -> GetBatchStatusesResponse:
         """
         Get online statuses for multiple users
 
         `POST /chats/statuses`
-        Docs: https://api.fanvue.com/docs/api-reference/reference/chats/get-batch-statuses
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-batch-statuses
         """
         return cast(GetBatchStatusesResponse, await self._client._call_operation(
             operation_id='get_batch_statuses',
             body=body,
+        ))
+
+    async def get_custom_list_members(self, uuid: str, *, page: float | None = None, size: float | None = None) -> GetCustomListMembersResponse:
+        """
+        Get custom list members
+
+        `GET /chats/lists/custom/{uuid}`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-custom-list-members
+        """
+        return cast(GetCustomListMembersResponse, await self._client._call_operation(
+            operation_id='get_custom_list_members',
+            path_params={
+                'uuid': uuid,
+            },
+            query_params={
+                'page': page,
+                'size': size,
+            },
+        ))
+
+    async def get_custom_lists(self, *, page: float | None = None, size: float | None = None, search: str | None = None) -> GetCustomListsResponse:
+        """
+        Get custom lists
+
+        `GET /chats/lists/custom`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-custom-lists
+        """
+        return cast(GetCustomListsResponse, await self._client._call_operation(
+            operation_id='get_custom_lists',
+            query_params={
+                'page': page,
+                'size': size,
+                'search': search,
+            },
+        ))
+
+    async def get_message_media_by_uuids(self, user_uuid: str, message_uuid: str, *, media_uuids: str, variants: str | None = None) -> GetMessageMediaByUuidsResponse:
+        """
+        Resolve media UUIDs for a chat message
+
+        `GET /chats/{userUuid}/messages/{messageUuid}/media`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-message-media-by-uuids
+        """
+        return cast(GetMessageMediaByUuidsResponse, await self._client._call_operation(
+            operation_id='get_message_media_by_uuids',
+            path_params={
+                'userUuid': user_uuid,
+                'messageUuid': message_uuid,
+            },
+            query_params={
+                'mediaUuids': media_uuids,
+                'variants': variants,
+            },
+        ))
+
+    async def get_smart_list_members(self, uuid: Literal['subscribers', 'auto_renewing', 'non_renewing', 'followers', 'free_trial_subscribers', 'expired_subscribers', 'spent_more_than_50', 'muted'], *, page: float | None = None, size: float | None = None) -> GetSmartListMembersResponse:
+        """
+        Get smart list members
+
+        `GET /chats/lists/smart/{uuid}`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-smart-list-members
+        """
+        return cast(GetSmartListMembersResponse, await self._client._call_operation(
+            operation_id='get_smart_list_members',
+            path_params={
+                'uuid': uuid,
+            },
+            query_params={
+                'page': page,
+                'size': size,
+            },
+        ))
+
+    async def get_smart_lists(self) -> GetSmartListsResponse:
+        """
+        Get smart lists
+
+        `GET /chats/lists/smart`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-smart-lists
+        """
+        return cast(GetSmartListsResponse, await self._client._call_operation(
+            operation_id='get_smart_lists',
+        ))
+
+    async def get_template_message(self, template_uuid: str) -> GetTemplateMessageResponse:
+        """
+        Get a single template message
+
+        `GET /chats/templates/{templateUuid}`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-template-message
+        """
+        return cast(GetTemplateMessageResponse, await self._client._call_operation(
+            operation_id='get_template_message',
+            path_params={
+                'templateUuid': template_uuid,
+            },
         ))
 
     async def get_unread_chats_count(self) -> GetUnreadChatsCountResponse:
@@ -47,18 +230,18 @@ class ChatsResource(BaseResource):
         Get unread chats, messages, and notifications count
 
         `GET /chats/unread`
-        Docs: https://api.fanvue.com/docs/api-reference/reference/chats/get-unread-chats-count
+        Docs: https://api.fanvue.com/docs/api-reference/reference/get-unread-chats-count
         """
         return cast(GetUnreadChatsCountResponse, await self._client._call_operation(
             operation_id='get_unread_chats_count',
         ))
 
-    async def list_chats(self, *, page: float | None = None, size: float | None = None, custom_list_id: str | None = None, smart_list_ids: Sequence[Literal['subscribers', 'auto_renewing', 'non_renewing', 'followers', 'free_trial_subscribers', 'expired_subscribers', 'spent_more_than_50']] | None = None, filter: Sequence[Literal['unread', 'subscribers', 'followers', 'online', 'recent_subscribers', 'not_answered', 'spent_more_than_50', 'on_free_trial', 'has_tipped', 'spenders', 'exclude_creators', 'subscribed_to', 'not_muted']] | None = None, search: str | None = None, sort_by: Literal['most_recent_messages', 'online_now', 'most_unanswered_chats'] | None = None) -> ListChatsResponse:
+    async def list_chats(self, *, page: float | None = None, size: float | None = None, custom_list_id: str | None = None, smart_list_ids: Sequence[Literal['subscribers', 'auto_renewing', 'non_renewing', 'followers', 'free_trial_subscribers', 'expired_subscribers', 'spent_more_than_50', 'muted']] | None = None, filter: Sequence[Literal['unread', 'subscribers', 'followers', 'online', 'recent_subscribers', 'not_answered', 'spent_more_than_50', 'on_free_trial', 'has_tipped', 'spenders', 'exclude_creators', 'subscribed_to', 'not_muted', 'archived']] | None = None, search: str | None = None, sort_by: Literal['most_recent_messages', 'online_now', 'most_unanswered_chats'] | None = None) -> ListChatsResponse:
         """
         Get list of chats
 
         `GET /chats`
-        Docs: https://api.fanvue.com/docs/api-reference/reference/chats/list-chats
+        Docs: https://api.fanvue.com/docs/api-reference/reference/list-chats
         """
         return cast(ListChatsResponse, await self._client._call_operation(
             operation_id='list_chats',
@@ -73,12 +256,28 @@ class ChatsResource(BaseResource):
             },
         ))
 
+    async def list_mass_messages(self, *, page: float | None = None, size: float | None = None, include_deleted: Literal['true', 'false'] | None = None) -> ListMassMessagesResponse:
+        """
+        List mass messages
+
+        `GET /chats/mass-messages`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/list-mass-messages
+        """
+        return cast(ListMassMessagesResponse, await self._client._call_operation(
+            operation_id='list_mass_messages',
+            query_params={
+                'page': page,
+                'size': size,
+                'includeDeleted': include_deleted,
+            },
+        ))
+
     async def list_media(self, user_uuid: str, *, cursor: str | None = None, media_type: Literal['image', 'video', 'audio', 'document'] | None = None, limit: float | None = None) -> ListMediaResponse:
         """
         Get media from a chat
 
         `GET /chats/{userUuid}/media`
-        Docs: https://api.fanvue.com/docs/api-reference/reference/chats/list-media
+        Docs: https://api.fanvue.com/docs/api-reference/reference/list-media
         """
         return cast(ListMediaResponse, await self._client._call_operation(
             operation_id='list_media',
@@ -92,17 +291,139 @@ class ChatsResource(BaseResource):
             },
         ))
 
-    async def update_chat(self, user_uuid: str, *, body: Mapping[str, Any] | None = None) -> None:
+    async def list_messages(self, user_uuid: str, *, page: float | None = None, size: float | None = None, mark_as_read: Literal['true', 'false'] | None = None) -> ListMessagesResponse:
+        """
+        Get messages from a chat
+
+        `GET /chats/{userUuid}/messages`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/list-messages
+        """
+        return cast(ListMessagesResponse, await self._client._call_operation(
+            operation_id='list_messages',
+            path_params={
+                'userUuid': user_uuid,
+            },
+            query_params={
+                'page': page,
+                'size': size,
+                'markAsRead': mark_as_read,
+            },
+        ))
+
+    async def list_template_messages(self, *, page: float | None = None, size: float | None = None, folder_name: str | None = None) -> ListTemplateMessagesResponse:
+        """
+        Get list of template messages
+
+        `GET /chats/templates`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/list-template-messages
+        """
+        return cast(ListTemplateMessagesResponse, await self._client._call_operation(
+            operation_id='list_template_messages',
+            query_params={
+                'page': page,
+                'size': size,
+                'folderName': folder_name,
+            },
+        ))
+
+    async def messages_batch(self, *, body: Mapping[str, Any]) -> MessagesBatchResponse:
+        """
+        Get messages from multiple chats in bulk
+
+        `POST /chats/messages/batch`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/messages-batch
+        """
+        return cast(MessagesBatchResponse, await self._client._call_operation(
+            operation_id='messages_batch',
+            body=body,
+        ))
+
+    async def remove_member_from_custom_list(self, uuid: str, user_uuid: str) -> None:
+        """
+        Remove a member from a custom list
+
+        `DELETE /chats/lists/custom/{uuid}/members/{userUuid}`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/remove-member-from-custom-list
+        """
+        await self._client._call_operation(
+            operation_id='remove_member_from_custom_list',
+            path_params={
+                'uuid': uuid,
+                'userUuid': user_uuid,
+            },
+        )
+        return None
+
+    async def send_mass_message(self, *, body: Mapping[str, Any]) -> SendMassMessageResponse:
+        """
+        Send a mass message
+
+        `POST /chats/mass-messages`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/send-mass-message
+        """
+        return cast(SendMassMessageResponse, await self._client._call_operation(
+            operation_id='send_mass_message',
+            body=body,
+        ))
+
+    async def send_message(self, user_uuid: str, *, body: Mapping[str, Any]) -> SendMessageResponse:
+        """
+        Send a message
+
+        `POST /chats/{userUuid}/message`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/send-message
+        """
+        return cast(SendMessageResponse, await self._client._call_operation(
+            operation_id='send_message',
+            path_params={
+                'userUuid': user_uuid,
+            },
+            body=body,
+        ))
+
+    async def update_chat(self, user_uuid: str, *, body: Mapping[str, Any]) -> None:
         """
         Update chat properties
 
         `PATCH /chats/{userUuid}`
-        Docs: https://api.fanvue.com/docs/api-reference/reference/chats/update-chat
+        Docs: https://api.fanvue.com/docs/api-reference/reference/update-chat
         """
         await self._client._call_operation(
             operation_id='update_chat',
             path_params={
                 'userUuid': user_uuid,
+            },
+            body=body,
+        )
+        return None
+
+    async def update_custom_list(self, uuid: str, *, body: Mapping[str, Any]) -> None:
+        """
+        Rename a custom list
+
+        `PATCH /chats/lists/custom/{uuid}`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/update-custom-list
+        """
+        await self._client._call_operation(
+            operation_id='update_custom_list',
+            path_params={
+                'uuid': uuid,
+            },
+            body=body,
+        )
+        return None
+
+    async def update_mass_message(self, message_uuid: str, *, body: Mapping[str, Any]) -> None:
+        """
+        Update a scheduled mass message
+
+        `PATCH /chats/mass-messages/{messageUuid}`
+        Docs: https://api.fanvue.com/docs/api-reference/reference/update-mass-message
+        """
+        await self._client._call_operation(
+            operation_id='update_mass_message',
+            path_params={
+                'messageUuid': message_uuid,
             },
             body=body,
         )
